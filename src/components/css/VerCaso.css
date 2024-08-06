@@ -1,0 +1,86 @@
+/* VerCaso.css */
+
+.container {
+    margin-top: 20px;
+  }
+  
+  .card {
+    margin-bottom: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  .card-img-top {
+    height: 200px;
+    object-fit: cover;
+  }
+  
+  .card-body {
+    padding: 20px;
+  }
+  
+  .patient-photo {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+  }
+  
+  .card-title {
+    font-size: 1.5rem;
+    font-weight: bold;
+  }
+  
+  .card-text {
+    margin-bottom: 10px;
+    font-size: 1rem;
+  }
+  
+  .card-text i {
+    margin-right: 10px;
+  }
+  
+  .list-group-item {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    font-size: 1rem;
+  }
+  
+  .list-group-item p {
+    margin: 0;
+    padding: 5px 0;
+  }
+  
+  .text-center {
+    text-align: center;
+  }
+  
+  .mt-4 {
+    margin-top: 1.5rem;
+  }
+  
+  .mb-3 {
+    margin-bottom: 1rem;
+  }
+  
+  .mb-4 {
+    margin-bottom: 1.5rem;
+  }
+  
+  .shadow-sm {
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+  }
+  
+  .btn {
+    display: flex;
+    align-items: center;
+  }
+  
+  .btn .fa-icon {
+    margin-right: 8px;
+  }
+  
+  @media (max-width: 768px) {
+    .btn {
+      font-size: 14px;
+    }
+  }
