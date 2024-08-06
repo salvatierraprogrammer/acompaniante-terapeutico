@@ -16,24 +16,44 @@ const NuevaPublicacion = () => {
     telefono: '',
     email: '',
   });
+  const [userData, setUserData] = useState({
+    photo: '',
+    nombreEntidad: '',
+    emailLaboral: '',
+    whatsapp: '',
+  });
   const [userRol, setUserRol] = useState(null);
   const [loading, setLoading] = useState(true);
-  
+
   const nuevaPublicacionCollection = collection(db, "publicaciones");
-  
+
   useEffect(() => {
-    const fetchUserRole = async () => {
+    const fetchUserRoleAndData = async () => {
       const user = auth.currentUser;
       if (user) {
         const userDoc = await getDoc(doc(db, 'usuarios', user.uid));
         if (userDoc.exists()) {
-          setUserRol(userDoc.data().userRol);
+          const userData = userDoc.data();
+          setUserRol(userData.userRol);
+          setUserData({
+            photo: userData.photo || 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR_AmH_mnnxa5khbmf8sQnFcOIXz3oWgfeU8ZBeXEORIA&s',
+            nombreEntidad: userData.nombreEntidad || 'Nombre de la Entidad',
+            emailLaboral: userData.emailLaboral || '',
+            whatsapp: userData.whatsapp || '',
+          });
+
+          // Actualizar el estado del formulario con el email y telefono del usuario
+          setFormData((prevData) => ({
+            ...prevData,
+            telefono: userData.whatsapp || '',
+            email: userData.emailLaboral || '',
+          }));
         }
       }
       setLoading(false);
     };
 
-    fetchUserRole();
+    fetchUserRoleAndData();
   }, []);
 
   const handleChange = (e) => {
@@ -51,8 +71,8 @@ const NuevaPublicacion = () => {
       const newPublication = {
         ...formData,
         userId: user.uid,
-        cliente: 'Mirada Humana', // Usar valores predeterminados como nombre y apellido
-        photo: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR_AmH_mnnxa5khbmf8sQnFcOIXz3oWgfeU8ZBeXEORIA&s',
+        cliente: userData.nombreEntidad,
+        photo: userData.photo,
         estado: 'Disponible',
       };
       await addDoc(nuevaPublicacionCollection, newPublication);
@@ -78,14 +98,16 @@ const NuevaPublicacion = () => {
               <div className="row mb-3">
                 <div className="col-md-4 d-flex justify-content-center align-items-center">
                   <img
-                    src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR_AmH_mnnxa5khbmf8sQnFcOIXz3oWgfeU8ZBeXEORIA&s"
-                    alt="Imagen por defecto"
+                    src={userData.photo}
+                    alt="Foto del usuario"
                     className="img-fluid rounded-circle"
                     style={{ maxWidth: '150px' }}
                   />
                 </div>
-                <h5>Mirada Humana</h5>
                 <div className="col-md-8">
+                  <h5>{userData.nombreEntidad}</h5>
+                </div>
+                <div className="col-md-12">
                   <form onSubmit={handleSubmit} className="needs-validation" noValidate>
                     {/* Campos del formulario */}
                     <div className="mb-3">
@@ -138,15 +160,20 @@ const NuevaPublicacion = () => {
                     </div>
                     <div className="mb-3">
                       <label htmlFor="zona" className="form-label">Zona</label>
-                      <input
-                        type="text"
+                      <select
                         id="zona"
                         name="zona"
                         value={formData.zona}
                         onChange={handleChange}
                         className="form-control"
                         required
-                      />
+                      >
+                        <option value="">Seleccionar Zona</option>
+                        <option value="CABA">CABA</option>
+                        <option value="Zona Sur">Zona Sur</option>
+                        <option value="Zona Norte">Zona Norte</option>
+                        <option value="Zona Oeste">Zona Oeste</option>
+                      </select>
                     </div>
                     <div className="mb-3">
                       <label htmlFor="diagnostico" className="form-label">Diagnóstico</label>

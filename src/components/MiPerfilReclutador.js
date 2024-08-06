@@ -1,56 +1,64 @@
 import React, { useEffect, useState } from 'react';
 import { doc, getDoc, setDoc, updateDoc } from 'firebase/firestore';
-import { db } from '../firebaseConfg/firebase'; // Ensure Firebase configuration is correctly imported
+import { db } from '../firebaseConfg/firebase';
 import { Button, Form } from 'react-bootstrap';
+import { getAuth } from 'firebase/auth';  // Asegúrate de que Firebase Authentication esté configurado
 
-const MiPerfilReclutador = ({ currentUserId }) => {
+const MiPerfilReclutador = () => {
   const [profileData, setProfileData] = useState({
     emailLaboral: '',
     nombreEntidad: '',
     photo: '',
-    userId: '',
-    whatsapp: ''
+    whatsapp: '',
   });
   const [isEditing, setIsEditing] = useState(false);
   const [updatedData, setUpdatedData] = useState({
     emailLaboral: '',
     nombreEntidad: '',
     photo: '',
-    whatsapp: ''
+    whatsapp: '',
   });
+  const [userId, setUserId] = useState(null);
 
   useEffect(() => {
+    // Obtener el usuario autenticado
+    const auth = getAuth();
+    const currentUser = auth.currentUser;
+    if (currentUser) {
+      setUserId(currentUser.uid);
+    } else {
+      console.warn('Usuario no autenticado.');
+    }
+  }, []);
+
+  useEffect(() => {
+    if (!userId) return;
+
     const fetchProfileData = async () => {
       try {
-        if (!currentUserId) return; // Ensure currentUserId is available
-
-        const profileRef = doc(db, 'reclutador', currentUserId);
+        const profileRef = doc(db, 'usuarios', userId);
         const profileDoc = await getDoc(profileRef);
         
         if (profileDoc.exists()) {
-          // Document exists, set the data
           const data = profileDoc.data();
           setProfileData({
             emailLaboral: data.emailLaboral || '',
             nombreEntidad: data.nombreEntidad || '',
             photo: data.photo || '',
-            userId: data.userId || '',
-            whatsapp: data.whatsapp || ''
+            whatsapp: data.whatsapp || '',
           });
           setUpdatedData({
             emailLaboral: data.emailLaboral || '',
             nombreEntidad: data.nombreEntidad || '',
             photo: data.photo || '',
-            whatsapp: data.whatsapp || ''
+            whatsapp: data.whatsapp || '',
           });
         } else {
-          // Document does not exist, create a new one with default values
           const defaultData = {
             emailLaboral: '',
             nombreEntidad: '',
-            photo: '', // Consider adding a placeholder image URL if needed
-            userId: currentUserId,
-            whatsapp: ''
+            photo: '',
+            whatsapp: '',
           };
           await setDoc(profileRef, defaultData);
           setProfileData(defaultData);
@@ -63,18 +71,19 @@ const MiPerfilReclutador = ({ currentUserId }) => {
     };
 
     fetchProfileData();
-  }, [currentUserId]);
+  }, [userId]);
 
   const handleUpdateProfile = async () => {
     try {
-      if (!currentUserId) return; // Ensure currentUserId is available
+      if (!userId) return;
 
-      const profileRef = doc(db, 'reclutador', currentUserId);
+      const profileRef = doc(db, 'usuarios', userId);
       await updateDoc(profileRef, updatedData);
       alert('Perfil actualizado exitosamente.');
       setProfileData(updatedData);
       setIsEditing(false);
     } catch (error) {
+      console.error('Error al actualizar el perfil:', error);
       alert('Error al actualizar el perfil: ' + error.message);
     }
   };
@@ -119,6 +128,7 @@ const MiPerfilReclutador = ({ currentUserId }) => {
             readOnly={!isEditing}
           />
         </Form.Group>
+        
         <div className="mt-3">
           {isEditing ? (
             <>

@@ -2,6 +2,10 @@ import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { collection, getDocs, getDoc, deleteDoc, doc, updateDoc } from 'firebase/firestore';
 import { db, auth } from '../firebaseConfg/firebase';
+import Swal from 'sweetalert2';
+import withReactContent from 'sweetalert2-react-content';
+
+const MySwal = withReactContent(Swal);
 
 const MisPublicaciones = () => {
   const [publicaciones, setPublicaciones] = useState([]);
@@ -40,9 +44,27 @@ const MisPublicaciones = () => {
   };
 
   const handleEliminar = async (id) => {
-    const publicationDoc = doc(db, 'publicaciones', id);
-    await deleteDoc(publicationDoc);
-    setPublicaciones(publicaciones.filter(pub => pub.id !== id));
+    const result = await MySwal.fire({
+      title: '¿Estás seguro?',
+      text: "¡No podrás deshacer esta acción!",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Sí, eliminar',
+      cancelButtonText: 'Cancelar'
+    });
+
+    if (result.isConfirmed) {
+      const publicationDoc = doc(db, 'publicaciones', id);
+      await deleteDoc(publicationDoc);
+      setPublicaciones(publicaciones.filter(pub => pub.id !== id));
+      MySwal.fire(
+        '¡Eliminado!',
+        'La publicación ha sido eliminada.',
+        'success'
+      );
+    }
   };
 
   return (
@@ -91,7 +113,7 @@ const MisPublicaciones = () => {
                       {pub.estado === 'Disponible' ? 'Desactivar' : 'Activar'}
                     </button>
                     <button
-                      className="btn btn-success"
+                      className="btn btn-warning"
                       onClick={() => handleEliminar(pub.id)}
                       style={{ minWidth: '120px' }}
                     >

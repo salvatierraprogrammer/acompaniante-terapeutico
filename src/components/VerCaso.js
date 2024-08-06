@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { doc, getDoc, collection, query, where, getDocs } from 'firebase/firestore';
-import { db } from '../firebaseConfg/firebase';
+import { db, auth } from '../firebaseConfg/firebase'; // Asegúrate de importar auth si es necesario
 import './css/VerCaso.css'; // Import the CSS file
 
 const VerCaso = () => {
@@ -9,25 +9,40 @@ const VerCaso = () => {
   const [publicacion, setPublicacion] = useState(null);
   const [mailEnviados, setMailEnviados] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [userId, setUserId] = useState(null);
+  const navigate = useNavigate(); // Hook para navegación
 
   useEffect(() => {
     const fetchPublicacion = async () => {
       setLoading(true);
       try {
+        // Obtener el userId del usuario autenticado
+        const currentUser = auth.currentUser;
+        if (currentUser) {
+          setUserId(currentUser.uid);
+        } else {
+          console.error("No se puede obtener el usuario autenticado.");
+          setLoading(false);
+          return;
+        }
+
+        // Obtener la publicación
         const docRef = doc(db, 'publicaciones', id);
         const docSnap = await getDoc(docRef);
         if (docSnap.exists()) {
           const data = docSnap.data();
           setPublicacion(data);
 
+          // Consultar los mails enviados por el usuario autenticado para la publicación
           const mailQuery = query(
             collection(db, 'mailEnviadosPostulado'),
-            where('userIdPublicacion', '==', id)
+            where('userIdPublicacion', '==', id),
+            where('userIdUsers', '==', currentUser.uid) // Filtrar por el userId del usuario autenticado
           );
           const mailQuerySnapshot = await getDocs(mailQuery);
           const mails = [];
           mailQuerySnapshot.forEach(doc => {
-            mails.push(doc.data());
+            mails.push({ id: doc.id, ...doc.data() });
           });
           setMailEnviados(mails);
         } else {
@@ -41,6 +56,10 @@ const VerCaso = () => {
 
     fetchPublicacion();
   }, [id]);
+
+  const handleBack = () => {
+    navigate(-1); // Navegar a la página anterior
+  };
 
   if (loading) {
     return <div className="text-center">Cargando...</div>;
@@ -77,23 +96,38 @@ const VerCaso = () => {
           </div>
         </div>
         <div className="mail-enviados flex-md-fill ms-md-3">
-          <h2 className="text-center">Mail Enviado</h2>
+          <h2 className="text-center mb-4">
+            <div className="me-md-3">
+              <i className="fas fa-envelope fa-2x text-primary me-2"></i>
+            </div>
+            Correos Enviados
+          </h2>
           {mailEnviados.length > 0 ? (
             <ul className="list-group">
-              {mailEnviados.map((mail, index) => (
-                <li key={index} className="list-group-item">
-                  <p><strong>Nombre:</strong> {mail.nombre}</p>
-                  <p><strong>Apellido:</strong> {mail.apellido}</p>
-                  <p><strong>Email:</strong> {mail.email}</p>
-                  <p><strong>Descripción:</strong> {mail.descripcion}</p>
-                  <p><strong>Fecha de Envío:</strong> {new Date(mail.fechaEnvio.seconds * 1000).toLocaleString()}</p>
+              {mailEnviados.map((mail) => (
+                <li key={mail.id} className="list-group-item d-flex flex-column flex-md-row align-items-start mb-3 shadow-sm p-3">
+                  <div className="flex-grow-1">
+                    <h5 className="mb-1"><strong>{mail.nombre} {mail.apellido}</strong></h5>
+                    <p className="mb-1"><i className="fas fa-envelope me-2"></i><strong>Email:</strong> {mail.email}</p>
+                    <p className="mb-1"><i className="fas fa-file-alt me-2"></i><strong>Descripción:</strong> {mail.descripcion}</p>
+                    <p className="mb-1"><i className="fas fa-calendar-day me-2"></i><strong>Fecha de Envío:</strong> {new Date(mail.fechaEnvio.seconds * 1000).toLocaleDateString()} {new Date(mail.fechaEnvio.seconds * 1000).toLocaleTimeString()}</p>
+                  </div>
                 </li>
               ))}
             </ul>
           ) : (
-            <div className="text-center">No se encontraron mails enviados.</div>
+            <div className="text-center mt-4">
+              <i className="fas fa-inbox fa-3x text-muted"></i>
+              <p className="mt-2">No se encontraron correos enviados.</p>
+            </div>
           )}
         </div>
+       
+      </div>
+      <div className="text-center mt-2">
+        <button className="btn btn-primary" onClick={handleBack}>
+          Volver Atrás
+        </button>
       </div>
     </div>
   );
