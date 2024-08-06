@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { collection, getDocs,getDoc, deleteDoc, doc, updateDoc } from 'firebase/firestore';
+import { collection, getDocs, getDoc, deleteDoc, doc, updateDoc } from 'firebase/firestore';
 import { db, auth } from '../firebaseConfg/firebase';
 
 const MisPublicaciones = () => {
@@ -12,13 +12,11 @@ const MisPublicaciones = () => {
 
   useEffect(() => {
     const fetchPublicaciones = async () => {
-      // Verificar el rol del usuario
       const user = auth.currentUser;
       if (user) {
         const userDoc = await getDoc(doc(db, 'usuarios', user.uid));
         if (userDoc.exists()) {
           setUserRol(userDoc.data().userRol);
-          // Obtener las publicaciones solo si el usuario es 'reclutador'
           if (userDoc.data().userRol === 'reclutador') {
             const data = await getDocs(publicacionesCollection);
             setPublicaciones(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
@@ -52,7 +50,7 @@ const MisPublicaciones = () => {
       <h1 className="mt-4 text-center mb-4">Mis Publicaciones</h1>
 
       <div className="text-center mb-4">
-        <Link className="btn btn-primary" to={'/nuevaPublicacion'}>
+        <Link className="btn btn-warning" to={'/nuevaPublicacion'}>
           <i className="fas fa-plus me-2"></i> Nueva Publicación
         </Link>
       </div>
@@ -60,14 +58,15 @@ const MisPublicaciones = () => {
       <div className="row justify-content-center">
         {publicacionesMiradaHumana.length > 0 ? (
           publicacionesMiradaHumana.map(pub => (
-            <div className="col-md-6 col-lg-4" key={pub.id}>
-              <div className="card mb-4 shadow-sm">
+            <div className="col-md-6 col-lg-4 mb-4" key={pub.id}>
+              <div className="card shadow-sm border-light">
                 <div className="card-body">
                   <div className="text-center mb-3">
                     <img
                       src={pub.photo}
-                      className="rounded-circle patient-photo mb-3"
+                      className="rounded-circle mb-3"
                       alt={`Foto de paciente ${pub.paciente}`}
+                      style={{ width: '100px', height: '100px', objectFit: 'cover' }}
                     />
                     <h5 className="card-title">Paciente {pub.paciente}</h5>
                   </div>
@@ -84,15 +83,17 @@ const MisPublicaciones = () => {
                   </div>
                   <div className="text-center mt-3">
                     <button
-                      className={`btn ${pub.estado === 'Disponible' ? 'btn-warning' : 'btn-success'} me-2 mb-2`}
+                      className={`btn ${pub.estado === 'Disponible' ? 'btn-warning' : 'btn-success'} me-2`}
                       onClick={() => handleActivar(pub.id, pub.estado)}
+                      style={{ minWidth: '120px' }}
                     >
                       <i className={`fas ${pub.estado === 'Disponible' ? 'fa-times' : 'fa-check'} me-2`}></i> 
                       {pub.estado === 'Disponible' ? 'Desactivar' : 'Activar'}
                     </button>
                     <button
-                      className="btn btn-danger mb-2"
+                      className="btn btn-success"
                       onClick={() => handleEliminar(pub.id)}
+                      style={{ minWidth: '120px' }}
                     >
                       <i className="fas fa-trash me-2"></i> Eliminar
                     </button>

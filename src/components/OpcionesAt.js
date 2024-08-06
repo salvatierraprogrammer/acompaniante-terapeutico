@@ -37,26 +37,26 @@ const OpcionesAt = () => {
 
     return (
         <div className="container mt-4">
-            <div className="row justify-content-center">
-                <div className="col-md-3 col-sm-6 d-flex flex-column align-items-center mb-3">
-                <Link to={'/cvEnvidos'}  className="btn-circle">
+            <div className="row row-cols-2 row-cols-md-4 justify-content-center">
+                <div className="col d-flex flex-column align-items-center mb-3">
+                    <Link to={'/cvEnvidos'} className="btn-circle">
                         <i className="fa-solid fa-file-alt"></i>
                     </Link>
                     <span className="btn-text">CV Enviados</span>
                 </div>
-                <div className="col-md-3 col-sm-6 d-flex flex-column align-items-center mb-3">
+                <div className="col d-flex flex-column align-items-center mb-3">
                     <Link to={'/perfilLaboralUpdate'} className="btn-circle">
                         <i className="fa-solid fa-user"></i>
                     </Link>
                     <span className="btn-text">Mi Perfil Laboral</span>
                 </div>
-                <div className="col-md-3 col-sm-6 d-flex flex-column align-items-center mb-3">
+                <div className="col d-flex flex-column align-items-center mb-3">
                     <Link to={'/miCuenta'} className="btn-circle">
                         <i className="fa-solid fa-user-cog"></i>
                     </Link>
                     <span className="btn-text">Mi Cuenta</span>
                 </div>
-                <div className="col-md-3 col-sm-6 d-flex flex-column align-items-center mb-3">
+                <div className="col d-flex flex-column align-items-center mb-3">
                     <button className="btn-circle btn-danger" onClick={handleSignOutConfirmation}>
                         <i className="fa-solid fa-sign-out-alt"></i>
                     </button>

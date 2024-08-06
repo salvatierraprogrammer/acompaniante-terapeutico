@@ -6,7 +6,7 @@ import { collection, getDocs, doc, getDoc } from 'firebase/firestore';
 import { db, auth } from '../firebaseConfg/firebase';
 import { onAuthStateChanged } from 'firebase/auth';
 import EnviarCV from './EnviarCV';
-import { Button } from 'react-bootstrap';
+import { Button, Form } from 'react-bootstrap';
 
 const BuscarTrabajo = () => {
   const [publicaciones, setPublicaciones] = useState([]);
@@ -16,6 +16,7 @@ const BuscarTrabajo = () => {
   const [selectedPublicacion, setSelectedPublicacion] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const [cvEnviado, setCvEnviado] = useState({});
+  const [selectedZone, setSelectedZone] = useState('Todos');
 
   const publicacionesCollection = collection(db, 'publicaciones');
   const usersCollection = collection(db, 'usuarios');
@@ -91,7 +92,10 @@ const BuscarTrabajo = () => {
     setCvEnviado((prev) => ({ ...prev, [publicacionId]: true }));
   };
 
-  const publicacionesDisponibles = publicaciones.filter(pub => pub.estado === 'Disponible');
+  const publicacionesDisponibles = publicaciones.filter(pub => 
+    (selectedZone === 'Todos' || pub.zona === selectedZone) &&
+    pub.estado === 'Disponible'
+  );
 
   if (loading) {
     return <div className="text-center">Cargando...</div>;
@@ -99,11 +103,26 @@ const BuscarTrabajo = () => {
 
   return (
     <div className="container">
-      
       {userRol === 'empleado' && (
         <>
           <OpcionesAt />
-          <h1 className="mt-4 text-center">Buscar Pacientes</h1>
+          <h1 className="mt-4 text-center">
+            <i className="fa-solid fa-search"></i> Buscar Trabajo
+          </h1>
+          <div className="row mb-4">
+            <div className="col-md-4 offset-md-4">
+              <Form.Select
+                value={selectedZone}
+                onChange={(e) => setSelectedZone(e.target.value)}
+              >
+                <option value="Todos">Todos</option>
+                <option value="Zona Sur">Zona Sur</option>
+                <option value="CABA">CABA</option>
+                <option value="Zona Norte">Zona Norte</option>
+                <option value="Zona Oeste">Zona Oeste</option>
+              </Form.Select>
+            </div>
+          </div>
           <div className="text-center mb-4">
             {selectedPublicacion && (
               <EnviarCV
@@ -130,7 +149,7 @@ const BuscarTrabajo = () => {
                     <img
                       src={p.photo}
                       className="rounded-circle patient-photo mb-3"
-                      alt={`Foto de ${p.paciente}`}
+                      alt={`Foto de ${p.cliente}`}
                     />
                     <h5 className="card-title">{p.cliente}</h5>
                   </div>
@@ -167,7 +186,7 @@ const BuscarTrabajo = () => {
             </div>
           ))
         ) : (
-          <p className="text-center">No hay pacientes disponibles.</p>
+          <p className="text-center">No hay trabajos disponibles.</p>
         )}
       </div>
     </div>

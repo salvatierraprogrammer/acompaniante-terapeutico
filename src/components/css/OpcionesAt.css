@@ -43,3 +43,35 @@
   font-size: 14px;
   margin-top: 8px;
 }
+/* OpcionesAt.css / OpcionesReclutador.css */
+
+.btn-circle {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background-color: #007bff; /* Customize as needed */
+  color: white;
+  font-size: 24px;
+  text-align: center;
+  line-height: 60px;
+}
+
+.btn-circle.btn-danger {
+  background-color: #dc3545; /* Customize as needed */
+}
+
+.btn-text {
+  margin-top: 8px;
+  text-align: center;
+}
+
+@media (max-width: 767px) {
+  .btn-circle {
+      width: 50px;
+      height: 50px;
+      font-size: 20px;
+  }
+}

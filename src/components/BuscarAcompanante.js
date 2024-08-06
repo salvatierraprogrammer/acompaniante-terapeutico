@@ -7,14 +7,17 @@ import { collection, getDocs, doc, getDoc } from 'firebase/firestore';
 import { db, auth } from '../firebaseConfg/firebase';
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
-import { Button } from 'react-bootstrap';
+import { Button, Form } from 'react-bootstrap';
 
 const MySwal = withReactContent(Swal);
 
 const BuscarAcompanante = () => {
   const [perfilLaboral, setPerfilLaboral] = useState([]);
+  const [filteredPerfilLaboral, setFilteredPerfilLaboral] = useState([]);
   const [userRol, setUserRol] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [selectedZone, setSelectedZone] = useState('Todos');
   const navigate = useNavigate();
   const perfilLaboralCollection = collection(db, 'perfilLaboral');
   const usersCollection = collection(db, 'usuarios');
@@ -47,6 +50,14 @@ const BuscarAcompanante = () => {
 
     fetchData();
   }, [navigate]);
+
+  useEffect(() => {
+    const filtered = perfilLaboral.filter(a =>
+      a.nombreCompleto.toLowerCase().includes(searchTerm.toLowerCase()) &&
+      (selectedZone === 'Todos' || a.zona === selectedZone)
+    );
+    setFilteredPerfilLaboral(filtered);
+  }, [searchTerm, selectedZone, perfilLaboral]);
 
   const handleContactClick = (acompananteId) => {
     const user = auth.currentUser;
@@ -81,7 +92,6 @@ const BuscarAcompanante = () => {
 
   return (
     <div className="container">
-      <h1 className="mt-4 text-center">Buscar Acompañante Terapéutico</h1>
       {userRol === 'reclutador' ? (
         <OpcionesReclutador />
       ) : userRol === 'empleado' ? (
@@ -93,9 +103,31 @@ const BuscarAcompanante = () => {
           <Link to="/login" className="btn btn-primary">Iniciar Sesión</Link>
         </div>
       )}
-      <br />
+      
+    
+
+      <h1 className="mt-4 text-center">
+        <i className="fa-solid fa-search"></i> Buscar Acompañante Terapéutico
+      </h1>
+      
+      <div className="row mb-4">
+       
+        <div className="col-md-4 offset-md-4">
+          <Form.Select
+            value={selectedZone}
+            onChange={(e) => setSelectedZone(e.target.value)}
+          >
+            <option value="Todos">Todos</option>
+            <option value="Zona Sur">Zona Sur</option>
+            <option value="CABA">CABA</option>
+            <option value="Zona Norte">Zona Norte</option>
+            <option value="Zona Oeste">Zona Oeste</option>
+          </Form.Select>
+        </div>
+      </div>
+
       <div className="row justify-content-center">
-        {perfilLaboral.map(a => (
+        {filteredPerfilLaboral.map(a => (
           <div className="col-md-6 col-lg-4" key={a.id}>
             <div className="card mb-4 shadow-sm">
               <div className="text-center">
@@ -107,7 +139,7 @@ const BuscarAcompanante = () => {
                 <h5 className="card-title">{a.nombreCompleto}</h5>
                 <p className="card-text">
                   <i className="fas fa-check-circle me-2"></i>
-                  <strong>Estado: </strong> 
+                  <strong>Estado: </strong>
                   <span className={`badge ${a.estado === 'Disponible' ? 'bg-success' : 'bg-secondary'}`}>
                     {a.estado}
                   </span>
