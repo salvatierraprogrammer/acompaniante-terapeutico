@@ -1,13 +1,13 @@
 {
   "files": {
-    "main.css": "/acompaniante-terapeutico/static/css/main.dde31467.css",
-    "main.js": "/acompaniante-terapeutico/static/js/main.99a3c224.js",
+    "main.css": "/acompaniante-terapeutico/static/css/main.83eb21cd.css",
+    "main.js": "/acompaniante-terapeutico/static/js/main.e78130d8.js",
     "index.html": "/acompaniante-terapeutico/index.html",
-    "main.dde31467.css.map": "/acompaniante-terapeutico/static/css/main.dde31467.css.map",
-    "main.99a3c224.js.map": "/acompaniante-terapeutico/static/js/main.99a3c224.js.map"
+    "main.83eb21cd.css.map": "/acompaniante-terapeutico/static/css/main.83eb21cd.css.map",
+    "main.e78130d8.js.map": "/acompaniante-terapeutico/static/js/main.e78130d8.js.map"
   },
   "entrypoints": [
-    "static/css/main.dde31467.css",
-    "static/js/main.99a3c224.js"
+    "static/css/main.83eb21cd.css",
+    "static/js/main.e78130d8.js"
   ]
 }
