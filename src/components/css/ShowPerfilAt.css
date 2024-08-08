@@ -31,3 +31,8 @@
   .badge {
     font-size: 0.9rem;
   }
+  .button-group {
+    display: flex;
+    justify-content: center;
+    gap: 10px; /* Ajusta el espacio entre los botones según lo necesites */
+  }

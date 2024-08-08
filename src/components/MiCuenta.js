@@ -4,6 +4,8 @@ import { doc, getDoc, updateDoc, deleteDoc } from 'firebase/firestore';
 import { db, auth } from '../firebaseConfg/firebase'; // Asegúrate de que la configuración de Firebase esté correctamente importada
 import { Button, Modal, Form, Alert } from 'react-bootstrap';
 import MiPerfilReclutador from './MiPerfilReclutador';
+import Cargando from './Cargando';
+import { useNavigate } from 'react-router-dom';
 
 const MiCuenta = () => {
   const [userData, setUserData] = useState(null);
@@ -19,6 +21,7 @@ const MiCuenta = () => {
     apellido: '',
     phoneNumber: ''
   });
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -94,23 +97,29 @@ const MiCuenta = () => {
       }
     }
   };
-
-  if (loading) return <p>Cargando...</p>;
+  const handleGoBack = () => {
+    navigate(-1); // Va a la página anterior
+  };
+  if (loading) return  <Cargando/>;
   if (error) return <p>{error}</p>;
 
   return (
     <div className="container mt-4">
-      <h1 className="text-center mb-4">Mi Cuenta</h1>
+      <h1 className="text-center mb-4 text-white">Mi Cuenta</h1>
+      <div className="footer-modal">
+            <button onClick={handleGoBack} className="btn btn-secondary mt-2 mb-2">Inicio</button>
+          </div>
+  
       <div className="row justify-content-center">
         <div className="col-md-8">
           <div className="card">
             <div className="card-body">
-              <h5 className="card-title">Datos de Usuario</h5>
+              <h5 className="card-title text-white">Datos de Usuario</h5>
               {userData ? (
                 <>
-                  <p className="card-text"><strong>Nombre:</strong> {userData.nombre} {userData.apellido}</p>
-                  <p className="card-text"><strong>Teléfono:</strong> {userData.phoneNumber}</p>
-                  <p className="card-text"><strong>Email:</strong> {userData.email}</p>
+                  <p className="card-text text-white"><strong className='text-white'>Nombre:</strong> {userData.nombre} {userData.apellido}</p>
+                  <p className="card-text text-white"><strong className='text-white'>Teléfono:</strong> {userData.phoneNumber}</p>
+                  <p className="card-text text-white"><strong className='text-white'>Email:</strong> {userData.email}</p>
                   <div className="d-flex justify-content-between mt-4">
                     <button className="btn btn-circle btn-circle-primary" onClick={() => setShowChangePasswordModal(true)}>
                       <i className="fa-solid fa-key"></i> {/* Icono para cambiar contraseña */}
@@ -133,7 +142,7 @@ const MiCuenta = () => {
           {userRol === 'reclutador' && (
             <div className="card mt-4">
               <div className="card-body">
-                <h5 className="card-title">Mi perfil reclutador</h5>
+                <h5 className="card-title text-white">Mi perfil reclutador</h5>
                 <MiPerfilReclutador />
               </div>
             </div>

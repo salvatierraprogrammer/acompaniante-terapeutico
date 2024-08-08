@@ -4,12 +4,17 @@ import { collection, getDocs, getDoc, deleteDoc, doc, updateDoc } from 'firebase
 import { db, auth } from '../firebaseConfg/firebase';
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
+import Cargando from './Cargando';
+import GoBack from './GoBack';
+
+
 
 const MySwal = withReactContent(Swal);
 
 const MisPublicaciones = () => {
   const [publicaciones, setPublicaciones] = useState([]);
   const [userRol, setUserRol] = useState(null);
+  const [loading, setLoading] = useState(true); // Estado de carga
   const navigate = useNavigate();
   
   const publicacionesCollection = collection(db, 'publicaciones');
@@ -20,15 +25,19 @@ const MisPublicaciones = () => {
       if (user) {
         const userDoc = await getDoc(doc(db, 'usuarios', user.uid));
         if (userDoc.exists()) {
-          setUserRol(userDoc.data().userRol);
-          if (userDoc.data().userRol === 'reclutador') {
+          const userData = userDoc.data();
+          setUserRol(userData.userRol);
+
+          // Mostrar publicaciones solo para administradores y reclutadores
+          if (userData.userRol === 'reclutador' || userData.userRol === 'administrador') {
             const data = await getDocs(publicacionesCollection);
             setPublicaciones(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
           } else {
-            navigate('/'); // Redirigir si el usuario no es reclutador
+            navigate('/'); // Redirigir si el usuario no tiene permiso
           }
         }
       }
+      setLoading(false); // Fin del estado de carga
     };
 
     fetchPublicaciones();
@@ -67,15 +76,28 @@ const MisPublicaciones = () => {
     }
   };
 
+  if (loading) {
+    return (
+     <Cargando/>
+    );
+  }
+
   return (
     <div className="container">
-      <h1 className="mt-4 text-center mb-4">Mis Publicaciones</h1>
-
-      <div className="text-center mb-4">
-        <Link className="btn btn-warning" to={'/nuevaPublicacion'}>
-          <i className="fas fa-plus me-2"></i> Nueva Publicación
-        </Link>
-      </div>
+      <h1 className="mt-4 text-center mb-4 text-white">Mis Publicaciones</h1>
+      <GoBack/>
+      {userRol === 'reclutador' ? (
+        <div className="text-center mb-4">
+         
+          <Link className="btn btn-warning text-white" to={'/nuevaPublicacion'}>
+            <i className="fas fa-plus me-2 text-white"></i> Nueva Publicación
+          </Link>
+        </div>
+      ) : userRol === 'administrador' ? (
+        <p className="text-center">Como administrador, no puedes agregar nuevas publicaciones.</p>
+      ) : (
+        <p className="text-center">No tienes permiso para ver esta página.</p>
+      )}
 
       <div className="row justify-content-center">
         {publicacionesMiradaHumana.length > 0 ? (
@@ -90,22 +112,23 @@ const MisPublicaciones = () => {
                       alt={`Foto de paciente ${pub.paciente}`}
                       style={{ width: '100px', height: '100px', objectFit: 'cover' }}
                     />
-                    <h5 className="card-title">Paciente {pub.paciente}</h5>
+                    <h5 className="card-title text-white">{pub.cliente}</h5>
                   </div>
                   <div className="text-start">
-                    <p className="card-text"><i className="fas fa-calendar-day me-2"></i><strong>Edad:</strong> {pub.edad}</p>
-                    <p className="card-text"><i className="fas fa-venus-mars me-2"></i><strong>Sexo:</strong> {pub.sexo}</p>
-                    <p className="card-text"><i className="fas fa-map-marker-alt me-2"></i><strong>Localidad:</strong> {pub.localidad}</p>
-                    <p className="card-text"><i className="fas fa-map-marker-alt me-2"></i><strong>Zona:</strong> {pub.zona}</p>
-                    <p className="card-text"><i className="fas fa-notes-medical me-2"></i><strong>Diagnóstico:</strong> {pub.diagnostico}</p>
-                    <p className="card-text"><i className="fas fa-align-left me-2"></i><strong>Descripción:</strong> {pub.descripcion}</p>
-                    <p className="card-text"><i className="fas fa-phone-alt me-2"></i><strong>Teléfono:</strong> {pub.telefono}</p>
-                    <p className="card-text"><i className="fas fa-envelope me-2"></i><strong>Email:</strong> {pub.email}</p>
-                    <p className="card-text"><i className="fas fa-info-circle me-2"></i><strong>Estado:</strong> {pub.estado}</p>
+                  <p className="card-text text-white">Nº Paciente {pub.paciente}</p>
+                    <p className="card-text text-white"><i className="fas fa-calendar-day me-2"></i><strong className='text-white'>Edad:</strong> {pub.edad}</p>
+                    <p className="card-text text-white"><i className="fas fa-venus-mars me-2"></i><strong className='text-white'>Sexo:</strong> {pub.sexo}</p>
+                    <p className="card-text text-white"><i className="fas fa-map-marker-alt me-2"></i><strong className='text-white'>Localidad:</strong> {pub.localidad}</p>
+                    <p className="card-text text-white"><i className="fas fa-map-marker-alt me-2"></i><strong className='text-white'>Zona:</strong> {pub.zona}</p>
+                    <p className="card-text text-white"><i className="fas fa-notes-medical me-2"></i><strong className='text-white'>Diagnóstico:</strong> {pub.diagnostico}</p>
+                    <p className="card-text text-white"><i className="fas fa-align-left me-2"></i><strong className='text-white'>Descripción:</strong> {pub.descripcion}</p>
+                    <p className="card-text text-white"><i className="fas fa-phone-alt me-2"></i><strong className='text-white'>Teléfono:</strong> {pub.telefono}</p>
+                    <p className="card-text text-white"><i className="fas fa-envelope me-2"></i><strong className='text-white'>Email:</strong> {pub.email}</p>
+                    <p className="card-text text-white"><i className="fas fa-info-circle me-2"></i><strong className='text-white'>Estado:</strong> {pub.estado}</p>
                   </div>
                   <div className="text-center mt-3">
                     <button
-                      className={`btn ${pub.estado === 'Disponible' ? 'btn-warning' : 'btn-success'} me-2`}
+                      className={`btn text-white ${pub.estado === 'Disponible' ? 'btn-warning' : 'btn-success'} me-2`}
                       onClick={() => handleActivar(pub.id, pub.estado)}
                       style={{ minWidth: '120px' }}
                     >
@@ -113,11 +136,11 @@ const MisPublicaciones = () => {
                       {pub.estado === 'Disponible' ? 'Desactivar' : 'Activar'}
                     </button>
                     <button
-                      className="btn btn-warning"
+                      className="btn btn-warning text-white"
                       onClick={() => handleEliminar(pub.id)}
                       style={{ minWidth: '120px' }}
                     >
-                      <i className="fas fa-trash me-2"></i> Eliminar
+                      <i className="fas fa-trash me-2 text-white"></i> Eliminar
                     </button>
                   </div>
                 </div>

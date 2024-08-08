@@ -1,4 +1,16 @@
-.btn-circle {
+.container {
+  padding: 20px;
+}
+
+.d-flex {
+  display: flex;
+}
+
+.justify-content-around {
+  justify-content: space-around;
+}
+
+.btn-opciones {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -6,32 +18,31 @@
   width: 100px;
   height: 100px;
   border-radius: 50%;
-  background-color: #007bff;
+  background-color: #007bff; /* Customize as needed */
   color: white;
   text-align: center;
   text-decoration: none;
-  transition: background-color 0.3s;
+  transition: background-color 0.3s, transform 0.3s;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Added shadow for depth */
 }
 
-.btn-circle:hover {
+.btn-opciones:hover {
   background-color: #0056b3;
+  transform: scale(1.05); /* Slightly enlarge on hover */
 }
 
-.btn-circle i {
+.btn-opciones i {
   font-size: 24px;
   margin-bottom: 8px;
 }
 
-.btn-circle .btn-text {
+.btn-text {
   font-size: 14px;
   margin-top: 8px;
+  color: white;
 }
 
 .btn-danger {
-  width: 100px;
-  height: 100px;
-  border-radius: 50%;
-  font-size: 24px;
   background-color: #dc3545;
 }
 
@@ -43,35 +54,17 @@
   font-size: 14px;
   margin-top: 8px;
 }
-/* OpcionesAt.css / OpcionesReclutador.css */
-
-.btn-circle {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 60px;
-  height: 60px;
-  border-radius: 50%;
-  background-color: #007bff; /* Customize as needed */
-  color: white;
-  font-size: 24px;
-  text-align: center;
-  line-height: 60px;
-}
-
-.btn-circle.btn-danger {
-  background-color: #dc3545; /* Customize as needed */
-}
-
-.btn-text {
-  margin-top: 8px;
-  text-align: center;
-}
 
 @media (max-width: 767px) {
-  .btn-circle {
-      width: 50px;
-      height: 50px;
-      font-size: 20px;
+  .btn-opciones {
+    width: 80px;
+    height: 80px;
+    font-size: 20px;
+  }
+}
+
+@media (min-width: 768px) {
+  .container {
+    max-width: 960px; /* Limiting width on larger screens */
   }
 }

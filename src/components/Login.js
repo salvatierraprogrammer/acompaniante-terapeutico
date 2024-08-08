@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { auth, db } from '../firebaseConfg/firebase'; // Asegúrate de importar correctamente tu configuración de Firebase
 import { doc, getDoc } from 'firebase/firestore';
+import Cargando from './Cargando'; // Importa el componente de carga
 import './css/Login.css'; // Asegúrate de tener estilos si es necesario
 
 const Login = () => {
@@ -10,10 +11,12 @@ const Login = () => {
   const [password, setPassword] = useState('');
   const [error, setError] = useState(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [loading, setLoading] = useState(false); // Estado para manejar la carga
   const navigate = useNavigate();
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+    setLoading(true); // Muestra el spinner al comenzar el inicio de sesión
     try {
       // Iniciar sesión con el correo y la contraseña proporcionados
       const userCredential = await signInWithEmailAndPassword(auth, email, password);
@@ -30,6 +33,8 @@ const Login = () => {
           navigate('/buscar-acompanante');
         } else if (userRol === 'empleado') {
           navigate('/buscar-trabajo');
+        } else if (userRol === 'administrador') {
+          navigate('/admin');
         } else {
           navigate('/'); // Redirige a una página predeterminada si el rol no es reconocido
         }
@@ -39,6 +44,8 @@ const Login = () => {
       }
     } catch (error) {
       setError(error.message);
+    } finally {
+      setLoading(false); // Oculta el spinner después de procesar el inicio de sesión
     }
   };
 
@@ -56,6 +63,8 @@ const Login = () => {
               navigate('/buscar-acompanante');
             } else if (userRol === 'empleado') {
               navigate('/buscar-trabajo');
+            } else if (userRol === 'administrador') {
+              navigate('/admin');
             } else {
               navigate('/'); // Redirige a una página predeterminada si el rol no es reconocido
             }
@@ -68,15 +77,19 @@ const Login = () => {
     checkAuth();
   }, [navigate]);
 
+  if (loading) {
+    return <Cargando />; // Muestra el spinner mientras se redirige
+  }
+
   return (
     <div className="container">
-      <h1 className="text-center mt-4">Iniciar Sesión</h1>
+      <h1 className="text-center mt-4 text-white">Iniciar Sesión</h1>
       <div className="row justify-content-center mt-4">
         <div className="col-md-6 col-lg-4">
           <div className="card p-4 shadow-sm">
             <form onSubmit={handleSubmit}>
               <div className="mb-3">
-                <label htmlFor="email" className="form-label">Correo Electrónico</label>
+                <label htmlFor="email" className="form-label text-white">Correo Electrónico</label>
                 <input
                   type="email"
                   className="form-control"
@@ -87,7 +100,7 @@ const Login = () => {
                 />
               </div>
               <div className="mb-3">
-                <label htmlFor="password" className="form-label">Contraseña</label>
+                <label htmlFor="password" className="form-label text-white">Contraseña</label>
                 <input
                   type="password"
                   className="form-control"
@@ -98,10 +111,10 @@ const Login = () => {
                 />
               </div>
               {error && <div className="alert alert-danger">{error}</div>}
-              <button type="submit" className="btn btn-primary">Iniciar Sesión</button>
+              <button type="submit" className="btn btn-primary text-white">Iniciar Sesión</button>
               <div className="text-center mt-3">
-                <p>¿No tienes cuenta?</p>
-                <Link to={"/crearCuenta"} className="btn btn-secondary">Crear Cuenta</Link>
+                <p className='text-white'>¿No tienes cuenta?</p>
+                <Link to={"/crearCuenta"} className="btn btn-secondary text-white">Crear Cuenta</Link>
               </div>
             </form>
           </div>

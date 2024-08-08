@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import './css/BuscarAcompanante.css';
-import Header from './Header';
 import OpcionesReclutador from './OpcionesReclutador';
 import { Link, useNavigate } from 'react-router-dom';
 import { collection, getDocs, doc, getDoc } from 'firebase/firestore';
 import { db, auth } from '../firebaseConfg/firebase';
+import { Button, Form } from 'react-bootstrap';
+import Cargando from './Cargando';
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
-import { Button, Form } from 'react-bootstrap';
+
 
 const MySwal = withReactContent(Swal);
 
@@ -87,7 +88,7 @@ const BuscarAcompanante = () => {
   };
 
   if (loading) {
-    return <div className="text-center mt-4">Cargando...</div>;
+    return <Cargando/>;
   }
 
   return (
@@ -95,8 +96,8 @@ const BuscarAcompanante = () => {
       {userRol === 'reclutador' ? (
         <OpcionesReclutador />
       ) : userRol === 'empleado' ? (
-        <div className="text-center mb-4">
-          <Link to="/buscar-trabajo" className="btn btn-primary">Buscar Trabajo</Link>
+        <div className="text-center">
+          <Link to="/buscar-trabajo" className="btn btn-secondary text-white">Buscar Trabajo</Link>
         </div>
       ) : (
         <div className="text-center mb-4">
@@ -106,7 +107,7 @@ const BuscarAcompanante = () => {
       
     
 
-      <h1 className="mt-4 text-center">
+      <h1 className="mt-4 text-center text-white">
         <i className="fa-solid fa-search"></i> Buscar Acompañante Terapéutico
       </h1>
       
@@ -136,35 +137,35 @@ const BuscarAcompanante = () => {
                   className="rounded-circle patient-photo mb-3"
                   alt={a.nombreCompleto}
                 />
-                <h5 className="card-title">{a.nombreCompleto}</h5>
-                <p className="card-text">
+                <h5 className="card-title text-white">{a.nombreCompleto}</h5>
+                <p className="card-text text-white">
                   <i className="fas fa-check-circle me-2"></i>
-                  <strong>Estado: </strong>
+                  <strong className='text-white'>Estado: </strong>
                   <span className={`badge ${a.estado === 'Disponible' ? 'bg-success' : 'bg-secondary'}`}>
                     {a.estado}
                   </span>
                 </p>
               </div>
               <div className="card-body">
-                <p className="card-text">
+                <p className="card-text text-white">
                   <i className="fas fa-map-marker-alt me-2"></i>
-                  <strong>Localidad:</strong> {a.localidad}
+                  <strong className='text-white'>Localidad:</strong> {a.localidad}
                 </p>
-                <p className="card-text">
+                <p className="card-text text-white">
                   <i className="fas fa-map-marker-alt me-2"></i>
-                  <strong>Zona:</strong> {a.zona}
+                  <strong className='text-white'>Zona:</strong> {a.zona}
                 </p>
-                <p className="card-text">
+                <p className="card-text text-white">
                   <i className="fas fa-briefcase me-2"></i>
-                  <strong>Preferencia Laboral:</strong> {a.preferenciaLaboral}
+                  <strong className='text-white'>Preferencia Laboral:</strong> {a.preferenciaLaboral}
                 </p>
-                <p className="card-text">
+                <p className="card-text text-white">
                   <i className="fas fa-graduation-cap me-2"></i>
-                  <strong>Formación:</strong> {a.formacion}
+                  <strong className='text-white'>Formación:</strong> {a.formacion}
                 </p>
-                <p className="card-text">
+                <p className="card-text text-white">
                   <i className="fas fa-certificate me-2"></i>
-                  <strong>Título:</strong> {a.titulo}
+                  <strong className='text-white'>Título:</strong> {a.titulo}
                 </p>
                 <div className="text-center mt-3">
                   <Button

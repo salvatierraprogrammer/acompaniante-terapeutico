@@ -90,10 +90,10 @@ const MiPerfilReclutador = () => {
 
   return (
     <div>
-      <h5>Perfil del Reclutador</h5>
+      {/* <h5 className='text-white'>Perfil del Reclutador</h5> */}
       <Form>
         <Form.Group controlId="formEmailLaboral">
-          <Form.Label>Email Laboral</Form.Label>
+          <Form.Label><p className='text-white'>Email Laboral</p></Form.Label>
           <Form.Control
             type="email"
             value={isEditing ? updatedData.emailLaboral : profileData.emailLaboral}
@@ -102,7 +102,7 @@ const MiPerfilReclutador = () => {
           />
         </Form.Group>
         <Form.Group controlId="formNombreEntidad">
-          <Form.Label>Nombre de la Entidad</Form.Label>
+          <Form.Label><p className='text-white'>Nombre de la Entidad</p></Form.Label>
           <Form.Control
             type="text"
             value={isEditing ? updatedData.nombreEntidad : profileData.nombreEntidad}
@@ -111,7 +111,7 @@ const MiPerfilReclutador = () => {
           />
         </Form.Group>
         <Form.Group controlId="formPhoto">
-          <Form.Label>Foto</Form.Label>
+          <Form.Label><p className='text-white'>Foto</p></Form.Label>
           <Form.Control
             type="text"
             value={isEditing ? updatedData.photo : profileData.photo}
@@ -120,7 +120,7 @@ const MiPerfilReclutador = () => {
           />
         </Form.Group>
         <Form.Group controlId="formWhatsapp">
-          <Form.Label>Whatsapp</Form.Label>
+          <Form.Label><p className='text-white'>Whatsapp</p></Form.Label>
           <Form.Control
             type="text"
             value={isEditing ? updatedData.whatsapp : profileData.whatsapp}

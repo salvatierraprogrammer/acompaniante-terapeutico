@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { collection, addDoc, getDoc, doc } from 'firebase/firestore';
-import { db, auth } from '../firebaseConfg/firebase'; // Asegúrate de importar auth
+import { db, auth } from '../firebaseConfg/firebase';
+import Cargando from './Cargando';
 
 const NuevaPublicacion = () => {
   const navigate = useNavigate();
@@ -15,6 +16,7 @@ const NuevaPublicacion = () => {
     descripcion: '',
     telefono: '',
     email: '',
+    fechaCreacion: new Date()
   });
   const [userData, setUserData] = useState({
     photo: '',
@@ -36,29 +38,43 @@ const NuevaPublicacion = () => {
           const userData = userDoc.data();
           setUserRol(userData.userRol);
           setUserData({
-            photo: userData.photo || 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR_AmH_mnnxa5khbmf8sQnFcOIXz3oWgfeU8ZBeXEORIA&s',
+            photo: userData.photo || 'https://revistapublicando.org/revista/public/site/images/jaroch/20943528.jpg',
             nombreEntidad: userData.nombreEntidad || 'Nombre de la Entidad',
             emailLaboral: userData.emailLaboral || '',
             whatsapp: userData.whatsapp || '',
           });
 
-          // Actualizar el estado del formulario con el email y telefono del usuario
           setFormData((prevData) => ({
             ...prevData,
             telefono: userData.whatsapp || '',
             email: userData.emailLaboral || '',
           }));
+
+          if (
+            userData.userRol === 'reclutador' && 
+            (!userData.nombreEntidad || !userData.emailLaboral || !userData.whatsapp)
+          ) {
+            navigate('/miCuenta');
+          }
         }
       }
       setLoading(false);
     };
 
     fetchUserRoleAndData();
-  }, []);
+  }, [navigate]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
+  };
+
+  const handleUserDataChange = (e) => {
+    const { name, value } = e.target;
+    setUserData((prevData) => ({
       ...prevData,
       [name]: value,
     }));
@@ -76,21 +92,20 @@ const NuevaPublicacion = () => {
         estado: 'Disponible',
       };
       await addDoc(nuevaPublicacionCollection, newPublication);
-      navigate('/');
+      navigate('/buscar-trabajo');
     } else {
-      // Manejar el caso en que el usuario no es un reclutador o no está autenticado
       alert('No tienes permiso para publicar.');
       navigate('/');
     }
   };
 
   if (loading) {
-    return <div className="text-center">Cargando...</div>;
+    return <Cargando />;
   }
 
   return (
     <div className="container">
-      <h1 className="mt-4 text-center mb-4">Nueva Publicación</h1>
+      <h1 className="mt-4 text-center mb-4 text-white">Nueva Publicación</h1>
       <div className="row justify-content-center">
         <div className="col-md-8">
           <div className="card">
@@ -105,13 +120,35 @@ const NuevaPublicacion = () => {
                   />
                 </div>
                 <div className="col-md-8">
-                  <h5>{userData.nombreEntidad}</h5>
+                  <h5 className='text-white'>{userData.nombreEntidad}</h5>
+                  {userRol === 'administrador' && (
+                    <div className="mb-3">
+                      <label htmlFor="photo" className="form-label text-white">URL de la Imagen</label>
+                      <input
+                        type="text"
+                        id="photo"
+                        name="photo"
+                        value={userData.photo}
+                        onChange={handleUserDataChange}
+                        className="form-control"
+                      />
+                      <label htmlFor="nombreEntidad" className="form-label text-white">Nombre de la Entidad</label>
+                      <input
+                        type="text"
+                        id="nombreEntidad"
+                        name="nombreEntidad"
+                        value={userData.nombreEntidad}
+                        onChange={handleUserDataChange}
+                        className="form-control"
+                      />
+                    </div>
+                  )}
                 </div>
                 <div className="col-md-12">
                   <form onSubmit={handleSubmit} className="needs-validation" noValidate>
                     {/* Campos del formulario */}
                     <div className="mb-3">
-                      <label htmlFor="paciente" className="form-label">Paciente</label>
+                      <label htmlFor="paciente" className="form-label text-white">Paciente</label>
                       <input
                         type="text"
                         id="paciente"
@@ -123,7 +160,7 @@ const NuevaPublicacion = () => {
                       />
                     </div>
                     <div className="mb-3">
-                      <label htmlFor="edad" className="form-label">Edad</label>
+                      <label htmlFor="edad" className="form-label text-white">Edad</label>
                       <input
                         type="text"
                         id="edad"
@@ -135,7 +172,7 @@ const NuevaPublicacion = () => {
                       />
                     </div>
                     <div className="mb-3">
-                      <label htmlFor="sexo" className="form-label">Sexo</label>
+                      <label htmlFor="sexo" className="form-label text-white">Sexo</label>
                       <input
                         type="text"
                         id="sexo"
@@ -147,7 +184,7 @@ const NuevaPublicacion = () => {
                       />
                     </div>
                     <div className="mb-3">
-                      <label htmlFor="localidad" className="form-label">Localidad</label>
+                      <label htmlFor="localidad" className="form-label text-white">Localidad</label>
                       <input
                         type="text"
                         id="localidad"
@@ -159,7 +196,7 @@ const NuevaPublicacion = () => {
                       />
                     </div>
                     <div className="mb-3">
-                      <label htmlFor="zona" className="form-label">Zona</label>
+                      <label htmlFor="zona" className="form-label text-white">Zona</label>
                       <select
                         id="zona"
                         name="zona"
@@ -176,7 +213,7 @@ const NuevaPublicacion = () => {
                       </select>
                     </div>
                     <div className="mb-3">
-                      <label htmlFor="diagnostico" className="form-label">Diagnóstico</label>
+                      <label htmlFor="diagnostico" className="form-label text-white">Diagnóstico</label>
                       <input
                         type="text"
                         id="diagnostico"
@@ -188,7 +225,7 @@ const NuevaPublicacion = () => {
                       />
                     </div>
                     <div className="mb-3">
-                      <label htmlFor="descripcion" className="form-label">Descripción</label>
+                      <label htmlFor="descripcion" className="form-label text-white">Descripción</label>
                       <textarea
                         id="descripcion"
                         name="descripcion"
@@ -200,7 +237,7 @@ const NuevaPublicacion = () => {
                       />
                     </div>
                     <div className="mb-3">
-                      <label htmlFor="telefono" className="form-label">Teléfono</label>
+                      <label htmlFor="telefono" className="form-label text-white">Teléfono</label>
                       <input
                         type="text"
                         id="telefono"
@@ -212,7 +249,7 @@ const NuevaPublicacion = () => {
                       />
                     </div>
                     <div className="mb-3">
-                      <label htmlFor="email" className="form-label">Email</label>
+                      <label htmlFor="email" className="form-label text-white">Email</label>
                       <input
                         type="email"
                         id="email"
@@ -223,7 +260,7 @@ const NuevaPublicacion = () => {
                         required
                       />
                     </div>
-                    <button type="submit" className="btn btn-primary">Agregar Publicación</button>
+                    <button type="submit" className="btn btn-primary">Publicar</button>
                   </form>
                 </div>
               </div>

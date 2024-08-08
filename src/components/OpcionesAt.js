@@ -1,15 +1,32 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import './css/OpcionesAt.css';
 import { Link, useNavigate } from 'react-router-dom';
 import { signOut } from 'firebase/auth';
-import { auth } from '../firebaseConfg/firebase';
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
+import { doc, getDoc } from 'firebase/firestore';
+import { db, auth } from '../firebaseConfg/firebase';
 
 const MySwal = withReactContent(Swal);
 
 const OpcionesAt = () => {
     const navigate = useNavigate();
+    const [profileImage, setProfileImage] = useState(null);
+
+    useEffect(() => {
+        const fetchProfileImage = async () => {
+            const userId = auth.currentUser.uid; // Obtén el UID del usuario actual
+            const docRef = doc(db, 'perfilLaboral', userId); // Usa 'db' en lugar de 'firestore'
+            const docSnap = await getDoc(docRef);
+
+            if (docSnap.exists()) {
+                const profileData = docSnap.data();
+                setProfileImage(profileData.images);
+            }
+        };
+
+        fetchProfileImage();
+    }, []);
 
     const handleSignOutConfirmation = () => {
         MySwal.fire({
@@ -38,29 +55,33 @@ const OpcionesAt = () => {
     return (
         <div className="container mt-4">
             <div className="row row-cols-2 row-cols-md-4 justify-content-center">
-                <div className="col d-flex flex-column align-items-center mb-3">
-                    <Link to={'/cvEnvidos'} className="btn-circle">
-                        <i className="fa-solid fa-file-alt"></i>
-                    </Link>
-                    <span className="btn-text">CV Enviados</span>
-                </div>
-                <div className="col d-flex flex-column align-items-center mb-3">
-                    <Link to={'/perfilLaboralUpdate'} className="btn-circle">
-                        <i className="fa-solid fa-user"></i>
-                    </Link>
-                    <span className="btn-text">Mi Perfil Laboral</span>
-                </div>
-                <div className="col d-flex flex-column align-items-center mb-3">
-                    <Link to={'/miCuenta'} className="btn-circle">
+            <div className="col d-flex flex-column align-items-center mb-3">
+                    <Link to={'/miCuenta'} className="btn-opciones btn-circle">
                         <i className="fa-solid fa-user-cog"></i>
                     </Link>
-                    <span className="btn-text">Mi Cuenta</span>
+                    <span className="btn-text text-white">Mi Cuenta</span>
+                </div>
+                <div className="col d-flex flex-column align-items-center mb-3">
+                    <Link to={'/cvEnvidos'} className="btn-opciones btn-circle">
+                        <i className="fa-solid fa-file-alt"></i>
+                    </Link>
+                    <span className="btn-text text-white">CV Enviados</span>
+                </div>
+                <div className="col d-flex flex-column align-items-center mb-3">
+                    <Link to={'/perfilLaboralUpdate'} className="btn-opciones btn-circle">
+                        {profileImage ? (
+                            <img src={profileImage} alt="Perfil" className="profile-image" />
+                        ) : (
+                            <i className="fa-solid fa-user"></i>
+                        )}
+                    </Link>
+                    <span className="btn-text text-white">Mi Perfil Laboral</span>
                 </div>
                 <div className="col d-flex flex-column align-items-center mb-3">
                     <button className="btn-circle btn-danger" onClick={handleSignOutConfirmation}>
                         <i className="fa-solid fa-sign-out-alt"></i>
                     </button>
-                    <span className="btn-text">Cerrar Sesión</span>
+                    <span className="btn-text text-white">Cerrar Sesión</span>
                 </div>
             </div>
         </div>

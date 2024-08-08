@@ -61,6 +61,8 @@ const CrearCuenta = () => {
                 userRol,
                 userId: user.uid,
                 email,
+                photo: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT2WjS_hXJ9gKTPO0DP2wQa9ho1mxaq2aynxQ&s',
+                estado: 'activo',
                 // Puedes agregar más campos aquí si es necesario
             });
 
@@ -74,13 +76,13 @@ const CrearCuenta = () => {
 
     return (
         <div className="container">
-            <h1 className="text-center mt-4">Crear Cuenta</h1>
+            <h1 className="text-center mt-4 text-white">Crear Cuenta</h1>
             <div className="row justify-content-center mt-4">
                 <div className="col-md-6 col-lg-4">
                     <div className="card p-4 shadow-sm">
                         <form onSubmit={handleRegister}>
                             <div className="mb-3">
-                                <label htmlFor="nombre" className="form-label">Nombre</label>
+                                <label htmlFor="nombre" className="form-label text-white">Nombre</label>
                                 <input
                                     type="text"
                                     className="form-control"
@@ -91,7 +93,7 @@ const CrearCuenta = () => {
                                 />
                             </div>
                             <div className="mb-3">
-                                <label htmlFor="apellido" className="form-label">Apellido</label>
+                                <label htmlFor="apellido" className="form-label text-white">Apellido</label>
                                 <input
                                     type="text"
                                     className="form-control"
@@ -102,7 +104,7 @@ const CrearCuenta = () => {
                                 />
                             </div>
                             <div className="mb-3">
-                                <label htmlFor="dni" className="form-label">DNI</label>
+                                <label htmlFor="dni" className="form-label text-white">DNI</label>
                                 <input
                                     type="text"
                                     className="form-control"
@@ -113,7 +115,7 @@ const CrearCuenta = () => {
                                 />
                             </div>
                             <div className="mb-3">
-                                <label htmlFor="phoneNumber" className="form-label">Número de Teléfono</label>
+                                <label htmlFor="phoneNumber" className="form-label text-white">Número de Teléfono</label>
                                 <input
                                     type="text"
                                     className="form-control"
@@ -124,7 +126,7 @@ const CrearCuenta = () => {
                                 />
                             </div>
                             <div className="mb-3">
-                                <label htmlFor="email" className="form-label">Correo Electrónico</label>
+                                <label htmlFor="email" className="form-label text-white">Correo Electrónico</label>
                                 <input
                                     type="email"
                                     className="form-control"
@@ -135,7 +137,7 @@ const CrearCuenta = () => {
                                 />
                             </div>
                             <div className="mb-3">
-                                <label htmlFor="password" className="form-label">Contraseña</label>
+                                <label htmlFor="password" className="form-label text-white">Contraseña</label>
                                 <input
                                     type="password"
                                     className="form-control"
@@ -146,7 +148,7 @@ const CrearCuenta = () => {
                                 />
                             </div>
                             <div className="mb-3">
-                                <label htmlFor="role" className="form-label">Selecciona un Rol</label>
+                                <label htmlFor="role" className="form-label text-white">Selecciona un Rol</label>
                                 <select
                                     id="role"
                                     className="form-control"
@@ -157,11 +159,11 @@ const CrearCuenta = () => {
                                     <option value="reclutador">Reclutador</option>
                                 </select>
                             </div>
-                            {error && <div className="alert alert-danger">{error}</div>}
-                            <button type="submit" className="btn btn-primary">Crear Cuenta</button>
+                            {error && <div className="alert alert-danger text-white">{error}</div>}
+                            <button type="submit" className="btn btn-primary text-white">Crear Cuenta</button>
                             <div className="text-center mt-3">
-                                <p>¿Ya tienes cuenta?</p>
-                                <Link to={"/login"} className="btn btn-secondary">Iniciar Sesión</Link>
+                                <p className='text-white'>¿Ya tienes cuenta?</p>
+                                <Link to={"/login"} className="btn btn-secondary text-white">Iniciar Sesión</Link>
                             </div>
                         </form>
                     </div>

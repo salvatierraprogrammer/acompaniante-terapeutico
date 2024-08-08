@@ -4,6 +4,7 @@ import { collection, getDocs, deleteDoc, doc } from 'firebase/firestore';
 import { db, auth } from '../firebaseConfg/firebase';
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
+import Cargando from './Cargando';
 
 const MySwal = withReactContent(Swal);
 
@@ -82,22 +83,25 @@ const CvEnviados = () => {
   };
 
   if (loading) {
-    return <div className="text-center">Cargando...</div>;
+    return  <Cargando/>;
   }
 
   return (
     <div className="container mt-4">
+      <h1 className='text-white'>Cv enviados</h1>
       <div className="row">
         <div className="col">
-          <div className="d-grid gap-2">
-            <button className="btn btn-secondary mt-2 mb-2">CV Enviados</button>
+          <div className="footer-modal">
+            <Link to={'/buscar-trabajo'} className="btn btn-secondary mt-2 mb-2">Volver al inicio</Link>
           </div>
-          <table className="table table-dark table-hover">
+          <table className="table table-custom table-hover">
             <thead>
               <tr>
                 <th>Foto</th>
-                <th>Nombre de Cliente</th>
-                <th>Número de Paciente</th>
+                <th>Nº Paciente</th>
+                <th>Entidad</th>
+                
+                <th>Estado</th>
                 <th>Acciones</th>
               </tr>
             </thead>
@@ -117,14 +121,16 @@ const CvEnviados = () => {
                         }} 
                       />
                     </td>
-                    <td>{cv.NombreCliente}</td>
-                    <td>{cv.numeroPaciente}</td>
+                    
+                    <td className='text-white'>{cv.numeroPaciente}</td>
+                    <td className='text-white'>{cv.NombreCliente}</td>
+                    <td className='text-white'>{cv.estado}</td>
                     <td>
-                      <Link to={`/verCaso/${cv.userIdPublicacion}`} className="btn btn-light me-2">
+                      <Link to={`/verCaso/${cv.userIdPublicacion}`} className="btn btn-light me-2 mb-2">
                         <i className="fa-regular fa-eye"></i>
                       </Link>
                       <button 
-                        className="btn btn-light me-2"
+                        className="btn btn-light me-2 mb-2"
                         onClick={() => handleEliminarConfirmation(cv.id)}
                       >
                         <i className="fa-solid fa-trash"></i>
@@ -134,7 +140,7 @@ const CvEnviados = () => {
                 ))
               ) : (
                 <tr>
-                  <td colSpan="4" className="text-center">No hay CVs enviados.</td>
+                  <td colSpan="4" className="alert alert-secondary text-center">No hay CVs enviados.</td>
                 </tr>
               )}
             </tbody>

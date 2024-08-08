@@ -11,6 +11,7 @@ const EnviarCV = ({ show, handleClose, publicacionId, onSuccess }) => {
   const [cv, setCv] = useState(null);
   const [nombreCliente, setNombreCliente] = useState('');
   const [numeroPaciente, setNumeroPaciente] = useState('');
+  const [userIdReclutador, setUserIdReclutador] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
@@ -21,7 +22,8 @@ const EnviarCV = ({ show, handleClose, publicacionId, onSuccess }) => {
         if (publicacionDoc.exists()) {
           const publicacionData = publicacionDoc.data();
           setNombreCliente(publicacionData.cliente);
-          setNumeroPaciente(publicacionData.paciente); // Asegúrate de usar el campo correcto
+          setNumeroPaciente(publicacionData.paciente);
+          setUserIdReclutador(publicacionData.userId); // Asegúrate de usar el campo correcto
         } else {
           setError('Publicación no encontrada.');
         }
@@ -81,6 +83,7 @@ const EnviarCV = ({ show, handleClose, publicacionId, onSuccess }) => {
         const mailData = {
           userIdUsers: userId,
           userIdPublicacion: publicacionId,
+          userIdReclutador: userIdReclutador,
           NombreCliente: nombreCliente,
           numeroPaciente,
           nombre,
@@ -88,6 +91,7 @@ const EnviarCV = ({ show, handleClose, publicacionId, onSuccess }) => {
           email,
           descripcion,
           cvUrl,
+          estado: 'Enviado',
           fechaEnvio: new Date()
         };
 

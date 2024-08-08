@@ -20,6 +20,12 @@ import CrearPerfilLaboral from './components/CrearPerfilLaboral';
 import Header from './components/Header';
 import Footer from './components/Footer';
 import VerCaso from './components/VerCaso';
+import Administrador from './components/Administrador';
+import UsuariosNuevos from './components/UsuariosNuevos';
+import VerUsuarios from './components/VerUsuarios';
+import CvRecibido from './components/CvRecibido';
+import Iniciar from './components/Iniciar';
+
 function App() {
   return (
     <div className="App">
@@ -27,6 +33,7 @@ function App() {
       <Header/>
         <Routes>
           <Route path='/' element={<Show/>} />
+          <Route path='/acompaniante-terapeutico' element={<Iniciar />} />
           <Route path='/buscar-trabajo' element={<BuscarTrabajo />} />
           <Route path='/buscar-acompanante' element={<BuscarAcompanante />} />
           <Route path='/showPerfil/:id' element={<ShowPerfilAt />} />
@@ -39,11 +46,20 @@ function App() {
           <Route path='/editarPerfilLaboral' element={<EditarPerfilLaboral/>} />
           <Route path="/crear-perfil-laboral" element={<CrearPerfilLaboral />} />
           <Route path='/miCuenta' element={<MiCuenta/>} />
+          <Route path='/admin' element={<Administrador/>} />
+          <Route path='/usuarios-nuevos' element={<UsuariosNuevos/>} />
           <Route path='/verCaso/:id' element={<VerCaso/>} />
+          <Route path='/ver-usuario/:id' element={<VerUsuarios/>} />
+          <Route path='/cv-recibido' element={<CvRecibido/>} />
+       
+
+
+          
           <Route path='/create' element={<Create/>} />
           <Route path='/edit/:id' element={<Edit/>} />        
         </Routes>
-        {/* <Footer/> */}
+        <br></br>
+                <Footer/>
       </BrowserRouter>
    
     </div>

@@ -37,24 +37,30 @@ const OpcionesReclutador = () => {
 
   return (
     <div className="container mt-4">
-      <div className="row row-cols-2 row-cols-md-3 justify-content-center">
-        <div className="col d-flex flex-column align-items-center mb-3">
-          <Link to={'/miCuenta'} className="btn-circle">
+      <div className="d-flex justify-content-around">
+        <div className="d-flex flex-column align-items-center mb-3">
+          <Link to={'/miCuenta'} className="btn-opciones btn-circle">
             <i className="fa-solid fa-user-cog"></i>
           </Link>
-          <span className="btn-text">Mi Cuenta</span>
+          <span className="btn-text text-white">Mi Cuenta</span>
         </div>
-        <div className="col d-flex flex-column align-items-center mb-3">
-          <Link to={'/misPublicaciones'} className="btn-circle">
+        <div className="d-flex flex-column align-items-center mb-3">
+          <Link to={'/cv-recibido'} className="btn-opciones btn-circle">
+            <i className="fa-solid fa-file-alt"></i>
+          </Link>
+          <span className="btn-text text-white">CV Recibidos</span>
+        </div>
+        <div className="d-flex flex-column align-items-center mb-3">
+          <Link to={'/misPublicaciones'} className="btn-opciones btn-circle">
             <i className="fa-solid fa-bullhorn"></i>
           </Link>
-          <span className="btn-text">Mis Publicaciones</span>
+          <span className="btn-text text-white">Mis Publicaciones</span>
         </div>
-        <div className="col d-flex flex-column align-items-center mb-3">
+        <div className="d-flex flex-column align-items-center mb-3">
           <button className="btn-circle btn-danger" onClick={handleSignOutConfirmation}>
             <i className="fa-solid fa-sign-out-alt"></i>
           </button>
-          <span className="btn-text">Cerrar Sesión</span>
+          <span className="btn-text text-white">Cerrar Sesión</span>
         </div>
       </div>
     </div>

@@ -7,12 +7,12 @@ const Footer = () => {
       <div className="container">
         <div className="row">
           <div className="col-md-4">
-            <h5>Contact Us</h5>
-            <p>Email: contact@example.com</p>
-            <p>Phone: +123 456 7890</p>
+            <h5>Contacto</h5>
+            <p>Email: elcanaldeat@gmail.com</p>
+            <p>Tel: +11 3275 2125</p>
           </div>
           <div className="col-md-4 text-center">
-            <h5>Follow Us</h5>
+            <h5>Redes sociales</h5>
             <div className="social-icons">
               <a href="https://facebook.com" target="_blank" rel="noopener noreferrer">
                 <i className="fa-brands fa-facebook-f"></i>
@@ -26,12 +26,12 @@ const Footer = () => {
             </div>
           </div>
           <div className="col-md-4 text-end">
-            <h5>About Us</h5>
-            <p>We provide the best therapeutic companion services.</p>
+            <h5>Ingresar</h5>
+            <p>Servicio completo.</p>
           </div>
         </div>
         <div className="text-center mt-3">
-          <p>&copy; {new Date().getFullYear()} Your Company Name. All rights reserved.</p>
+          <p>&copy; {new Date().getFullYear()}</p>
         </div>
       </div>
     </footer>

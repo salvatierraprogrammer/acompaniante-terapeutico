@@ -7,6 +7,7 @@ import { db, auth } from '../firebaseConfg/firebase';
 import { onAuthStateChanged } from 'firebase/auth';
 import EnviarCV from './EnviarCV';
 import { Button, Form } from 'react-bootstrap';
+import Cargando from './Cargando';
 
 const BuscarTrabajo = () => {
   const [publicaciones, setPublicaciones] = useState([]);
@@ -17,10 +18,12 @@ const BuscarTrabajo = () => {
   const [showModal, setShowModal] = useState(false);
   const [cvEnviado, setCvEnviado] = useState({});
   const [selectedZone, setSelectedZone] = useState('Todos');
+  const [hasPerfilLaboral, setHasPerfilLaboral] = useState(true);
 
   const publicacionesCollection = collection(db, 'publicaciones');
   const usersCollection = collection(db, 'usuarios');
   const mailEnviadosCollection = collection(db, 'mailEnviadosPostulado');
+  const perfilLaboralCollection = collection(db, 'perfilLaboral');
 
   const getPublicaciones = async () => {
     const data = await getDocs(publicacionesCollection);
@@ -39,6 +42,11 @@ const BuscarTrabajo = () => {
     } else {
       setUserRol(null);
     }
+  };
+
+  const checkPerfilLaboral = async (userId) => {
+    const perfilDoc = await getDoc(doc(db, 'perfilLaboral', userId));
+    setHasPerfilLaboral(perfilDoc.exists());
   };
 
   useEffect(() => {
@@ -64,9 +72,11 @@ const BuscarTrabajo = () => {
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
       if (user) {
-        await fetchUserRol(user.uid);
+        const userId = user.uid;
+        await fetchUserRol(userId);
         await getPublicaciones();
         await getUsers();
+        await checkPerfilLaboral(userId);
         setLoading(false);
       } else {
         setUserRol(null);
@@ -79,8 +89,13 @@ const BuscarTrabajo = () => {
   }, []);
 
   const handleShowModal = (publicacionId) => {
-    setSelectedPublicacion(publicacionId);
-    setShowModal(true);
+    if (userRol === 'empleado' && hasPerfilLaboral) {
+      setSelectedPublicacion(publicacionId);
+      setShowModal(true);
+    } else if (userRol === 'empleado' && !hasPerfilLaboral) {
+      // Redirigir al usuario a la página de creación de perfil laboral
+      window.location.href = '/crear-perfil-laboral';
+    }
   };
 
   const handleCloseModal = () => {
@@ -98,7 +113,7 @@ const BuscarTrabajo = () => {
   );
 
   if (loading) {
-    return <div className="text-center">Cargando...</div>;
+    return <Cargando/>;
   }
 
   return (
@@ -106,7 +121,7 @@ const BuscarTrabajo = () => {
       {userRol === 'empleado' && (
         <>
           <OpcionesAt />
-          <h1 className="mt-4 text-center">
+          <h1 className="mt-4 text-center text-white">
             <i className="fa-solid fa-search"></i> Buscar Trabajo
           </h1>
           <div className="row mb-4">
@@ -151,17 +166,17 @@ const BuscarTrabajo = () => {
                       className="rounded-circle patient-photo mb-3"
                       alt={`Foto de ${p.cliente}`}
                     />
-                    <h5 className="card-title">{p.cliente}</h5>
+                    <h5 className="card-title text-white">{p.cliente}</h5>
                   </div>
                   <div className="text-start">
-                    <p className="card-text"><i className="fas fa-birthday-cake me-2"></i><strong>Edad:</strong> {p.edad}</p>
-                    <p className="card-text"><i className="fas fa-venus-mars me-2"></i><strong>Sexo:</strong> {p.sexo}</p>
-                    <p className="card-text"><i className="fas fa-map-marker-alt me-2"></i><strong>Localidad:</strong> {p.localidad}</p>
-                    <p className="card-text"><i className="fas fa-map-marker-alt me-2"></i><strong>Zona:</strong> {p.zona}</p>
-                    <p className="card-text"><i className="fas fa-notes-medical me-2"></i><strong>Diagnóstico:</strong> {p.diagnostico}</p>
-                    <p className="card-text"><i className="fas fa-align-left me-2"></i><strong>Descripción:</strong> {p.descripcion}</p>
-                    <p className="card-text"><i className="fas fa-phone-alt me-2"></i><strong>Teléfono:</strong> {p.telefono}</p>
-                    <p className="card-text"><i className="fas fa-envelope me-2"></i><strong>Email:</strong> {p.email}</p>
+                    <p className="card-text text-white"><i className="fas fa-birthday-cake me-2"></i><strong className='text-white'>Edad:</strong> {p.edad}</p>
+                    <p className="card-text text-white"><i className="fas fa-venus-mars me-2"></i><strong className='text-white'>Sexo:</strong> {p.sexo}</p>
+                    <p className="card-text text-white"><i className="fas fa-map-marker-alt me-2"></i><strong className='text-white'>Localidad:</strong> {p.localidad}</p>
+                    <p className="card-text text-white"><i className="fas fa-map-marker-alt me-2"></i><strong className='text-white'>Zona:</strong> {p.zona}</p>
+                    <p className="card-text text-white"><i className="fas fa-notes-medical me-2"></i><strong className='text-white'>Diagnóstico:</strong> {p.diagnostico}</p>
+                    <p className="card-text text-white"><i className="fas fa-align-left me-2"></i><strong className='text-white'>Descripción:</strong> {p.descripcion}</p>
+                    <p className="card-text text-white"><i className="fas fa-phone-alt me-2"></i><strong className='text-white'>Teléfono:</strong> {p.telefono}</p>
+                    <p className="card-text text-white"><i className="fas fa-envelope me-2"></i><strong className='text-white'>Email:</strong> {p.email}</p>
                     <div className="text-center mt-3">
                       {userRol === 'empleado' ? (
                         cvEnviado[p.id] ? (
@@ -186,7 +201,8 @@ const BuscarTrabajo = () => {
             </div>
           ))
         ) : (
-          <p className="text-center">No hay trabajos disponibles.</p>
+          
+          <p className="alert alert-secondary text-center">No hay trabajos disponibles.</p>
         )}
       </div>
     </div>

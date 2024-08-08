@@ -1,7 +1,8 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import { doc, getDoc, updateDoc } from 'firebase/firestore';
 import { db, auth } from '../firebaseConfg/firebase';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import Cargando from './Cargando';
 
 const EditarPerfilLaboral = () => {
   const [perfilData, setPerfilData] = useState(null);
@@ -18,6 +19,7 @@ const EditarPerfilLaboral = () => {
     preferenciaLaboral: '',
     zona: '',
     images: '',
+    fechaActualizada: new Date(),
     estado: 'Disponible'
   });
 
@@ -83,19 +85,19 @@ const EditarPerfilLaboral = () => {
     }
   };
 
-  if (loading) return <p>Cargando...</p>;
+  if (loading) return  <Cargando/>;
   if (error) return <p className="text-danger">{error}</p>;
 
   return (
     <div className="container mt-4">
-      <h1 className="text-center mb-4">Actualizar Perfil Laboral</h1>
+      <h1 className="text-center mb-4 text-white">Actualizar Perfil Laboral</h1>
       <div className="row justify-content-center">
         <div className="col-md-8">
           <div className="card">
             <div className="card-body">
               <form onSubmit={handleSubmit}>
                 <div className="mb-3">
-                  <label htmlFor="nombreCompleto" className="form-label">Nombre Completo</label>
+                  <label htmlFor="nombreCompleto" className="form-label text-white">Nombre Completo</label>
                   <input
                     type="text"
                     id="nombreCompleto"
@@ -107,7 +109,7 @@ const EditarPerfilLaboral = () => {
                   />
                 </div>
                 <div className="mb-3">
-                  <label htmlFor="telefono" className="form-label">Teléfono</label>
+                  <label htmlFor="telefono" className="form-label text-white">Teléfono</label>
                   <input
                     type="text"
                     id="telefono"
@@ -119,7 +121,7 @@ const EditarPerfilLaboral = () => {
                   />
                 </div>
                 <div className="mb-3">
-                  <label htmlFor="email" className="form-label">Email</label>
+                  <label htmlFor="email" className="form-label text-white">Email</label>
                   <input
                     type="email"
                     id="email"
@@ -131,7 +133,7 @@ const EditarPerfilLaboral = () => {
                   />
                 </div>
                 <div className="mb-3">
-                  <label htmlFor="experiencia" className="form-label">Experiencia</label>
+                  <label htmlFor="experiencia" className="form-label text-white">Experiencia</label>
                   <textarea
                     id="experiencia"
                     name="experiencia"
@@ -143,7 +145,7 @@ const EditarPerfilLaboral = () => {
                   />
                 </div>
                 <div className="mb-3">
-                  <label htmlFor="formacion" className="form-label">Formación</label>
+                  <label htmlFor="formacion" className="form-label text-white">Formación</label>
                   <input
                     type="text"
                     id="formacion"
@@ -155,7 +157,7 @@ const EditarPerfilLaboral = () => {
                   />
                 </div>
                 <div className="mb-3">
-                  <label htmlFor="sobreMi" className="form-label">Sobre Mí</label>
+                  <label htmlFor="sobreMi" className="form-label text-white">Sobre Mí</label>
                   <textarea
                     id="sobreMi"
                     name="sobreMi"
@@ -167,7 +169,7 @@ const EditarPerfilLaboral = () => {
                   />
                 </div>
                 <div className="mb-3">
-                  <label htmlFor="localidad" className="form-label">Localidad</label>
+                  <label htmlFor="localidad" className="form-label text-white">Localidad</label>
                   <input
                     type="text"
                     id="localidad"
@@ -179,7 +181,7 @@ const EditarPerfilLaboral = () => {
                   />
                 </div>
                 <div className="mb-3">
-                  <label htmlFor="preferenciaLaboral" className="form-label">Preferencia Laboral</label>
+                  <label htmlFor="preferenciaLaboral" className="form-label text-white">Preferencia Laboral</label>
                   <input
                     type="text"
                     id="preferenciaLaboral"
@@ -191,7 +193,7 @@ const EditarPerfilLaboral = () => {
                   />
                 </div>
                 <div className="mb-3">
-                  <label htmlFor="zona" className="form-label">Zona</label>
+                  <label htmlFor="zona" className="form-label text-white">Zona</label>
                   <input
                     type="text"
                     id="zona"
@@ -203,7 +205,7 @@ const EditarPerfilLaboral = () => {
                   />
                 </div>
                 <div className="mb-3">
-                  <label htmlFor="images" className="form-label">Imagen</label>
+                  <label htmlFor="images" className="form-label text-white">Imagen</label>
                   <input
                     type="url"
                     id="images"
@@ -215,7 +217,7 @@ const EditarPerfilLaboral = () => {
                   />
                 </div>
                 <div className="mb-3">
-                  <label htmlFor="estado" className="form-label">Estado</label>
+                  <label htmlFor="estado" className="form-label text-white">Estado</label>
                   <select
                     id="estado"
                     name="estado"
@@ -229,7 +231,12 @@ const EditarPerfilLaboral = () => {
                     <option value="No Disponible">No Disponible</option>
                   </select>
                 </div>
-                <button type="submit" className="btn btn-warning">Actualizar</button>
+                <div className="modal-footer">
+                <button type="submit" className="btn btn-warning mt-2 me-2 text-white">Actualizar</button>
+                <Link to={'/buscar-trabajo'} className="btn btn-secondary mt-2">
+                  Volver a inicio
+                </Link>
+              </div>
               </form>
               {error && <p className="text-danger mt-3">{error}</p>}
             </div>
