@@ -94,9 +94,9 @@ const Header = () => {
     }
   };
 
-  if (userRol === null) {
-    return <div>Loading...</div>;
-  }
+  // if (userRol === null) {
+  //   return <div>Loading...</div>;
+  // }
 
   return (
     <AppBar position="fixed" className="app-bar">
