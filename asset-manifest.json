@@ -1,13 +1,13 @@
 {
   "files": {
-    "main.css": "/salvatierraprogrammer.github.io/acompaniante-terapeutico/static/css/main.58dd50d2.css",
-    "main.js": "/salvatierraprogrammer.github.io/acompaniante-terapeutico/static/js/main.23e4cb7b.js",
-    "index.html": "/salvatierraprogrammer.github.io/acompaniante-terapeutico/index.html",
-    "main.58dd50d2.css.map": "/salvatierraprogrammer.github.io/acompaniante-terapeutico/static/css/main.58dd50d2.css.map",
-    "main.23e4cb7b.js.map": "/salvatierraprogrammer.github.io/acompaniante-terapeutico/static/js/main.23e4cb7b.js.map"
+    "main.css": "/acompaniante-terapeutico/static/css/main.58dd50d2.css",
+    "main.js": "/acompaniante-terapeutico/static/js/main.eaabb293.js",
+    "index.html": "/acompaniante-terapeutico/index.html",
+    "main.58dd50d2.css.map": "/acompaniante-terapeutico/static/css/main.58dd50d2.css.map",
+    "main.eaabb293.js.map": "/acompaniante-terapeutico/static/js/main.eaabb293.js.map"
   },
   "entrypoints": [
     "static/css/main.58dd50d2.css",
-    "static/js/main.23e4cb7b.js"
+    "static/js/main.eaabb293.js"
   ]
 }
