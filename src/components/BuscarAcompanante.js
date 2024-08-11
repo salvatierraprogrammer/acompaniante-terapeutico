@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import './css/BuscarAcompanante.css';
-import OpcionesReclutador from './OpcionesReclutador';
+
 import { Link, useNavigate } from 'react-router-dom';
 import { collection, getDocs, doc, getDoc } from 'firebase/firestore';
 import { db, auth } from '../firebaseConfg/firebase';
