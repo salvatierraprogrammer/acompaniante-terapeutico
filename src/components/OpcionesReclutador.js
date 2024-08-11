@@ -36,7 +36,7 @@ const OpcionesReclutador = () => {
   };
 
   return (
-    <div className="container mt-4">
+    <div className="container mt-1">
       <div className="d-flex justify-content-around">
         <div className="d-flex flex-column align-items-center mb-3">
           <Link to={'/miCuenta'} className="btn-opciones btn-circle">

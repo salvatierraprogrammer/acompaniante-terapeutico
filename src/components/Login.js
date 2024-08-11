@@ -3,8 +3,8 @@ import { Link, useNavigate } from 'react-router-dom';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { auth, db } from '../firebaseConfg/firebase'; // Asegúrate de importar correctamente tu configuración de Firebase
 import { doc, getDoc } from 'firebase/firestore';
-import Cargando from './Cargando'; // Importa el componente de carga
-import './css/Login.css'; // Asegúrate de tener estilos si es necesario
+import CircularProgress from '@mui/material/CircularProgress';
+import { Container, Typography, TextField, Button, Card, CardContent, Alert, Box } from '@mui/material';
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -78,49 +78,63 @@ const Login = () => {
   }, [navigate]);
 
   if (loading) {
-    return <Cargando />; // Muestra el spinner mientras se redirige
+    return (
+      <Container
+        maxWidth="sm"
+        sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}
+      >
+        <CircularProgress />
+      </Container>
+    ); // Muestra el spinner mientras se redirige
   }
 
   return (
-    <div className="container">
-      <h1 className="text-center mt-4 text-white">Iniciar Sesión</h1>
-      <div className="row justify-content-center mt-4">
-        <div className="col-md-6 col-lg-4">
-          <div className="card p-4 shadow-sm">
-            <form onSubmit={handleSubmit}>
-              <div className="mb-3">
-                <label htmlFor="email" className="form-label text-white">Correo Electrónico</label>
-                <input
-                  type="email"
-                  className="form-control"
-                  id="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  required
-                />
-              </div>
-              <div className="mb-3">
-                <label htmlFor="password" className="form-label text-white">Contraseña</label>
-                <input
-                  type="password"
-                  className="form-control"
-                  id="password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  required
-                />
-              </div>
-              {error && <div className="alert alert-danger">{error}</div>}
-              <button type="submit" className="btn btn-primary text-white">Iniciar Sesión</button>
-              <div className="text-center mt-3">
-                <p className='text-white'>¿No tienes cuenta?</p>
-                <Link to={"/crearCuenta"} className="btn btn-secondary text-white">Crear Cuenta</Link>
-              </div>
-            </form>
-          </div>
-        </div>
-      </div>
-    </div>
+    <Container maxWidth="xs" sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', height: '100vh' }}>
+     <Typography className='text-white' variant="h4" align="center" gutterBottom>
+        Iniciar Sesión
+      </Typography>
+      <Card sx={{ background: 'background: linear-gradient(90deg, rgba(64,17,107,1) 0%, rgba(120,46,204,1) 26%, rgba(192,180,208,1) 100%)' }}>
+      
+        <CardContent>
+          <form onSubmit={handleSubmit}>
+            <Box mb={2}>
+              <TextField
+                label="Correo Electrónico"
+                variant="outlined"
+                fullWidth
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+              />
+            </Box>
+            <Box mb={2}>
+              <TextField
+                label="Contraseña"
+                variant="outlined"
+                fullWidth
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+              />
+            </Box>
+            {error && <Alert severity="error">{error}</Alert>}
+            <Button type="submit" variant="contained" color="primary" fullWidth>
+              Iniciar Sesión
+            </Button>
+            <Box mt={2} textAlign="center">
+              <Typography variant="body2">
+                ¿No tienes cuenta?{' '}
+                <Link to="/crearCuenta">
+                  Crear Cuenta
+                </Link>
+              </Typography>
+            </Box>
+          </form>
+        </CardContent>
+      </Card>
+    </Container>
   );
 };
 

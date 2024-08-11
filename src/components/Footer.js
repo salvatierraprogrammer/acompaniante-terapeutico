@@ -26,12 +26,12 @@ const Footer = () => {
             </div>
           </div>
           <div className="col-md-4 text-end">
-            <h5>Ingresar</h5>
-            <p>Servicio completo.</p>
+            <h5>Servicio Completo</h5>
+            <p>Explora nuestros servicios y descubre cómo podemos ayudarte.</p>
           </div>
         </div>
         <div className="text-center mt-3">
-          <p>&copy; {new Date().getFullYear()}</p>
+          <p>&copy; {new Date().getFullYear()} Todos los derechos reservados.</p>
         </div>
       </div>
     </footer>

@@ -1,44 +1,57 @@
-.footer {
-   
- background: rgb(2,0,36);
- background: linear-gradient(90deg, rgba(2,0,36,1) 0%, rgba(11,9,121,1) 36%, rgba(0,212,255,1) 100%);
-    padding: 20px 0;
-    border-top: 1px solid #e9ecef;
-  }
-  
+/* App.css */
+html, body {
+  height: 100%;
+  margin: 0;
+}
+
+.App {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh; /* Asegura que el contenedor ocupe toda la altura de la ventana */
+}
+
+.main-content {
+  flex: 1; /* Esto expande el contenido principal para llenar el espacio disponible */
+}
+
+footer {
+  background: linear-gradient(90deg, rgba(2,0,36,1) 0%, rgba(11,9,121,1) 36%, rgba(0,212,255,1) 100%);
+  padding: 20px 0;
+  border-top: 1px solid #e9ecef;
+  color: beige;
+  margin-top: auto; /* Empuja el footer hacia abajo cuando sea necesario */
+}
+
+.footer h5 {
+  font-weight: bold;
+  margin-bottom: 15px;
+}
+
+.footer p {
+  margin: 0;
+}
+
+.social-icons {
+  margin-top: 10px;
+}
+
+.social-icons a {
+  color: beige;
+  margin: 0 10px;
+  font-size: 20px;
+  text-decoration: none;
+}
+
+.social-icons a:hover {
+  color: #007bff;
+}
+
+@media (max-width: 768px) {
   .footer h5 {
-    font-weight: bold;
-    margin-bottom: 15px;
-    color:beige;
+    font-size: 16px;
   }
-  
-  .footer p {
-    margin: 0;
-    color:beige;
-  }
-  
-  .social-icons {
-    margin-top: 10px;
-    color:beige;
-  }
-  
+
   .social-icons a {
-    color:beige;
-    margin: 0 10px;
-    font-size: 20px;
-    text-decoration: none;
+    font-size: 18px;
   }
-  
-  .social-icons a:hover {
-    color: #007bff;
-  }
-  
-  @media (max-width: 768px) {
-    .footer h5 {
-      font-size: 16px;
-    }
-  
-    .social-icons a {
-      font-size: 18px;
-    }
-  }
+}

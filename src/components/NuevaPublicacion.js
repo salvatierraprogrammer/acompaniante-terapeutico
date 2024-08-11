@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { collection, addDoc, getDoc, doc } from 'firebase/firestore';
 import { db, auth } from '../firebaseConfg/firebase';
 import Cargando from './Cargando';
+import GoBack from './GoBack';
 
 const NuevaPublicacion = () => {
   const navigate = useNavigate();
@@ -13,6 +14,7 @@ const NuevaPublicacion = () => {
     localidad: '',
     zona: '',
     diagnostico: '',
+    generoAt: '',
     descripcion: '',
     telefono: '',
     email: '',
@@ -92,11 +94,17 @@ const NuevaPublicacion = () => {
         estado: 'Disponible',
       };
       await addDoc(nuevaPublicacionCollection, newPublication);
-      navigate('/buscar-trabajo');
+      navigate('/misPublicaciones');
     } else {
       alert('No tienes permiso para publicar.');
       navigate('/');
     }
+  };
+
+  const isFormValid = () => {
+    // Verifica que todos los campos requeridos estén completos
+    return Object.values(formData).every(value => value !== '') &&
+           userRol === 'reclutador';
   };
 
   if (loading) {
@@ -105,7 +113,9 @@ const NuevaPublicacion = () => {
 
   return (
     <div className="container">
-      <h1 className="mt-4 text-center mb-4 text-white">Nueva Publicación</h1>
+      <h1 className="mt-1 text-center mb-3 text-white">
+        <i className="fas fa-upload me-2"></i> Nueva publicación
+      </h1>
       <div className="row justify-content-center">
         <div className="col-md-8">
           <div className="card">
@@ -148,7 +158,7 @@ const NuevaPublicacion = () => {
                   <form onSubmit={handleSubmit} className="needs-validation" noValidate>
                     {/* Campos del formulario */}
                     <div className="mb-3">
-                      <label htmlFor="paciente" className="form-label text-white">Paciente</label>
+                      <label htmlFor="paciente" className="form-label text-white">Nº</label>
                       <input
                         type="text"
                         id="paciente"
@@ -172,16 +182,21 @@ const NuevaPublicacion = () => {
                       />
                     </div>
                     <div className="mb-3">
-                      <label htmlFor="sexo" className="form-label text-white">Sexo</label>
-                      <input
-                        type="text"
+                      <label htmlFor="sexo" className="form-label text-white">Género</label>
+                      <select
                         id="sexo"
                         name="sexo"
                         value={formData.sexo}
                         onChange={handleChange}
                         className="form-control"
                         required
-                      />
+                      >
+                        <option value="">Seleccionar Género</option>
+                        <option value="Masculino">Masculino</option>
+                        <option value="Femenino">Femenino</option>
+                        <option value="No binario">No binario</option>
+                        <option value="Prefiero no decirlo">Prefiero no decirlo</option>
+                      </select>
                     </div>
                     <div className="mb-3">
                       <label htmlFor="localidad" className="form-label text-white">Localidad</label>
@@ -225,6 +240,22 @@ const NuevaPublicacion = () => {
                       />
                     </div>
                     <div className="mb-3">
+                      <label htmlFor="generoAt" className="form-label text-white">Acompañante Terapéutico Preferentemente</label>
+                      <select
+                        id="generoAt"
+                        name="generoAt"
+                        value={formData.generoAt}
+                        onChange={handleChange}
+                        className="form-control"
+                        required
+                      >
+                        <option value="">Seleccionar Género</option>
+                        <option value="Indistinto">Indistinto</option>
+                        <option value="Masculino">Masculino</option>
+                        <option value="Femenino">Femenino</option>
+                      </select>
+                    </div>
+                    <div className="mb-3">
                       <label htmlFor="descripcion" className="form-label text-white">Descripción</label>
                       <textarea
                         id="descripcion"
@@ -260,7 +291,16 @@ const NuevaPublicacion = () => {
                         required
                       />
                     </div>
-                    <button type="submit" className="btn btn-primary">Publicar</button>
+                    <div className="button-group">
+                      <GoBack />
+                      <button 
+                        type="submit" 
+                        className="btn mt-2 mb-2" 
+                        disabled={!isFormValid()} // Deshabilita el botón si el formulario no es válido
+                      >
+                        <i className="fas fa-upload me-2"></i> Publicar
+                      </button>
+                    </div>
                   </form>
                 </div>
               </div>

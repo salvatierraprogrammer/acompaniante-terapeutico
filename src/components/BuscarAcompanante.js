@@ -93,8 +93,8 @@ const BuscarAcompanante = () => {
 
   return (
     <div className="container">
-      {userRol === 'reclutador' ? (
-        <OpcionesReclutador />
+      {/* {userRol === 'reclutador' ? (
+        // <OpcionesReclutador />
       ) : userRol === 'empleado' ? (
         <div className="text-center">
           <Link to="/buscar-trabajo" className="btn btn-secondary text-white">Buscar Trabajo</Link>
@@ -103,7 +103,7 @@ const BuscarAcompanante = () => {
         <div className="text-center mb-4">
           <Link to="/login" className="btn btn-primary">Iniciar Sesión</Link>
         </div>
-      )}
+      )} */}
       
     
 

@@ -120,7 +120,7 @@ const BuscarTrabajo = () => {
     <div className="container">
       {userRol === 'empleado' && (
         <>
-          <OpcionesAt />
+          {/* <OpcionesAt /> */}
           <h1 className="mt-4 text-center text-white">
             <i className="fa-solid fa-search"></i> Buscar Trabajo
           </h1>

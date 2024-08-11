@@ -11,7 +11,7 @@ const GoBack = () => {
   return (
     <div className="footer-modal">
       <button onClick={handleGoBack} className="btn btn-secondary mt-2 mb-2">
-        Inicio
+      <i class="fas fa-home me-2"></i> Inicio
       </button>
     </div>
   );

@@ -3,7 +3,13 @@ import { useNavigate, Link } from 'react-router-dom';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { auth, db } from '../firebaseConfg/firebase'; // Asegúrate de importar correctamente tu configuración de Firebase y Firestore
 import { doc, setDoc } from 'firebase/firestore';
-import './/css/CrearCuenta.css'; // Asegúrate de tener estilos si es necesario
+import { Container, Typography, TextField, Button, Card, CardContent, Alert, Box, InputAdornment, IconButton } from '@mui/material';
+import PersonIcon from '@mui/icons-material/Person';
+import EmailIcon from '@mui/icons-material/Email';
+import PhoneIcon from '@mui/icons-material/Phone';
+import VpnKeyIcon from '@mui/icons-material/VpnKey';
+import FaceIcon from '@mui/icons-material/Face';
+import LockIcon from '@mui/icons-material/Lock';
 
 const CrearCuenta = () => {
     const [email, setEmail] = useState('');
@@ -75,101 +81,149 @@ const CrearCuenta = () => {
     };
 
     return (
-        <div className="container">
-            <h1 className="text-center mt-4 text-white">Crear Cuenta</h1>
-            <div className="row justify-content-center mt-4">
-                <div className="col-md-6 col-lg-4">
-                    <div className="card p-4 shadow-sm">
-                        <form onSubmit={handleRegister}>
-                            <div className="mb-3">
-                                <label htmlFor="nombre" className="form-label text-white">Nombre</label>
-                                <input
-                                    type="text"
-                                    className="form-control"
-                                    id="nombre"
-                                    value={nombre}
-                                    onChange={(e) => setNombre(e.target.value)}
-                                    required
-                                />
-                            </div>
-                            <div className="mb-3">
-                                <label htmlFor="apellido" className="form-label text-white">Apellido</label>
-                                <input
-                                    type="text"
-                                    className="form-control"
-                                    id="apellido"
-                                    value={apellido}
-                                    onChange={(e) => setApellido(e.target.value)}
-                                    required
-                                />
-                            </div>
-                            <div className="mb-3">
-                                <label htmlFor="dni" className="form-label text-white">DNI</label>
-                                <input
-                                    type="text"
-                                    className="form-control"
-                                    id="dni"
-                                    value={dni}
-                                    onChange={(e) => setDni(e.target.value)}
-                                    required
-                                />
-                            </div>
-                            <div className="mb-3">
-                                <label htmlFor="phoneNumber" className="form-label text-white">Número de Teléfono</label>
-                                <input
-                                    type="text"
-                                    className="form-control"
-                                    id="phoneNumber"
-                                    value={phoneNumber}
-                                    onChange={(e) => setPhoneNumber(e.target.value)}
-                                    required
-                                />
-                            </div>
-                            <div className="mb-3">
-                                <label htmlFor="email" className="form-label text-white">Correo Electrónico</label>
-                                <input
-                                    type="email"
-                                    className="form-control"
-                                    id="email"
-                                    value={email}
-                                    onChange={(e) => setEmail(e.target.value)}
-                                    required
-                                />
-                            </div>
-                            <div className="mb-3">
-                                <label htmlFor="password" className="form-label text-white">Contraseña</label>
-                                <input
-                                    type="password"
-                                    className="form-control"
-                                    id="password"
-                                    value={password}
-                                    onChange={(e) => setPassword(e.target.value)}
-                                    required
-                                />
-                            </div>
-                            <div className="mb-3">
-                                <label htmlFor="role" className="form-label text-white">Selecciona un Rol</label>
-                                <select
-                                    id="role"
-                                    className="form-control"
-                                    value={userRol}
-                                    onChange={(e) => setUserRol(e.target.value)}
-                                >
-                                    <option value="empleado">Acompañante Terapeútico</option>
-                                    <option value="reclutador">Reclutador</option>
-                                </select>
-                            </div>
-                            {error && <div className="alert alert-danger text-white">{error}</div>}
-                            <button type="submit" className="btn btn-primary text-white">Crear Cuenta</button>
-                            <div className="text-center mt-3">
-                                <p className='text-white'>¿Ya tienes cuenta?</p>
-                                <Link to={"/login"} className="btn btn-secondary text-white">Iniciar Sesión</Link>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
+        <Container maxWidth="xs" sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', height: '100vh' }}>
+            <Typography className='text-white' variant="h4" align="center" gutterBottom>
+                Crear Cuenta
+            </Typography>
+            <Card>
+                <CardContent>
+                    <form onSubmit={handleRegister}>
+                        <Box mb={2}>
+                            <TextField
+                                label="Nombre"
+                                variant="outlined"
+                                fullWidth
+                                value={nombre}
+                                onChange={(e) => setNombre(e.target.value)}
+                                required
+                                InputProps={{
+                                    startAdornment: (
+                                        <InputAdornment position="start">
+                                            <FaceIcon />
+                                        </InputAdornment>
+                                    ),
+                                }}
+                            />
+                        </Box>
+                        <Box mb={2}>
+                            <TextField
+                                label="Apellido"
+                                variant="outlined"
+                                fullWidth
+                                value={apellido}
+                                onChange={(e) => setApellido(e.target.value)}
+                                required
+                                InputProps={{
+                                    startAdornment: (
+                                        <InputAdornment position="start">
+                                            <PersonIcon />
+                                        </InputAdornment>
+                                    ),
+                                }}
+                            />
+                        </Box>
+                        <Box mb={2}>
+                            <TextField
+                                label="DNI"
+                                variant="outlined"
+                                fullWidth
+                                value={dni}
+                                onChange={(e) => setDni(e.target.value)}
+                                required
+                                InputProps={{
+                                    startAdornment: (
+                                        <InputAdornment position="start">
+                                            <VpnKeyIcon />
+                                        </InputAdornment>
+                                    ),
+                                }}
+                            />
+                        </Box>
+                        <Box mb={2}>
+                            <TextField
+                                label="Número de Teléfono"
+                                variant="outlined"
+                                fullWidth
+                                value={phoneNumber}
+                                onChange={(e) => setPhoneNumber(e.target.value)}
+                                required
+                                InputProps={{
+                                    startAdornment: (
+                                        <InputAdornment position="start">
+                                            <PhoneIcon />
+                                        </InputAdornment>
+                                    ),
+                                }}
+                            />
+                        </Box>
+                        <Box mb={2}>
+                            <TextField
+                                label="Correo Electrónico"
+                                variant="outlined"
+                                fullWidth
+                                type="email"
+                                value={email}
+                                onChange={(e) => setEmail(e.target.value)}
+                                required
+                                InputProps={{
+                                    startAdornment: (
+                                        <InputAdornment position="start">
+                                            <EmailIcon />
+                                        </InputAdornment>
+                                    ),
+                                }}
+                            />
+                        </Box>
+                        <Box mb={2}>
+                            <TextField
+                                label="Contraseña"
+                                variant="outlined"
+                                fullWidth
+                                type="password"
+                                value={password}
+                                onChange={(e) => setPassword(e.target.value)}
+                                required
+                                InputProps={{
+                                    startAdornment: (
+                                        <InputAdornment position="start">
+                                            <LockIcon />
+                                        </InputAdornment>
+                                    ),
+                                }}
+                            />
+                        </Box>
+                        <Box mb={2}>
+                            <TextField
+                                select
+                                label="Selecciona un Rol"
+                                variant="outlined"
+                                fullWidth
+                                value={userRol}
+                                onChange={(e) => setUserRol(e.target.value)}
+                                SelectProps={{
+                                    native: true,
+                                }}
+                            >
+                                <option value="empleado">Acompañante Terapeútico</option>
+                                <option value="reclutador">Reclutador</option>
+                            </TextField>
+                        </Box>
+                        {error && <Alert severity="error">{error}</Alert>}
+                        <Button type="submit" variant="contained" color="primary" fullWidth>
+                            Crear Cuenta
+                        </Button>
+                        <Box mt={2} textAlign="center">
+                            <Typography variant="body2">
+                                ¿Ya tienes cuenta?{' '}
+                                <Link to="/login">
+                                    Iniciar Sesión
+                                </Link>
+                            </Typography>
+                        </Box>
+                    </form>
+                </CardContent>
+            </Card>
+        </Container>
     );
 };
 
