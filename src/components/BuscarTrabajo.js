@@ -94,7 +94,7 @@ const BuscarTrabajo = () => {
       setShowModal(true);
     } else if (userRol === 'empleado' && !hasPerfilLaboral) {
       // Redirigir al usuario a la página de creación de perfil laboral
-      window.location.href = '/crear-perfil-laboral';
+      window.location.href = 'https://salvatierraprogrammer.github.io/acompaniante-terapeutico/crear-perfil-laboral';
     }
   };
 
