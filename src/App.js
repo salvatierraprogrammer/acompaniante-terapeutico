@@ -2,7 +2,8 @@ import './App.css';
 import Show from './components/Show';
 import Create from './components/Create';
 import Edit from './components/Edit';
-import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+
 import BuscarTrabajo from './components/BuscarTrabajo';
 import BuscarAcompanante from './components/BuscarAcompanante';
 import ShowPerfilAt from './components/ShowPerfilAt';
@@ -47,7 +48,7 @@ const theme = createTheme({
 function App() {
   return (
     <div className="App">
-      <BrowserRouter>
+      <Router basename="/acompaniante-terapeutico">
         <ThemeProvider theme={theme}>
           <Header />
           <main className="main-content">
@@ -78,9 +79,8 @@ function App() {
           </main>
           <Footer />
         </ThemeProvider>
-      </BrowserRouter>
+      </Router>
     </div>
   );
 }
-
 export default App;
