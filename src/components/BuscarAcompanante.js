@@ -1,14 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import './css/BuscarAcompanante.css';
 
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { collection, getDocs, doc, getDoc } from 'firebase/firestore';
 import { db, auth } from '../firebaseConfg/firebase';
 import { Button, Form } from 'react-bootstrap';
 import Cargando from './Cargando';
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
-
 
 const MySwal = withReactContent(Swal);
 
@@ -43,14 +42,13 @@ const BuscarAcompanante = () => {
         await getUserRole(userId);
         await getPerfilLaboral();
       } else {
-        // No redirigir a login si el usuario no está autenticado
         await getPerfilLaboral();
       }
       setLoading(false);
     };
 
     fetchData();
-  }, [navigate]);
+  }, [auth.currentUser]);
 
   useEffect(() => {
     const filtered = perfilLaboral.filter(a =>
@@ -88,31 +86,16 @@ const BuscarAcompanante = () => {
   };
 
   if (loading) {
-    return <Cargando/>;
+    return <Cargando />;
   }
 
   return (
     <div className="container">
-      {/* {userRol === 'reclutador' ? (
-        // <OpcionesReclutador />
-      ) : userRol === 'empleado' ? (
-        <div className="text-center">
-          <Link to="/buscar-trabajo" className="btn btn-secondary text-white">Buscar Trabajo</Link>
-        </div>
-      ) : (
-        <div className="text-center mb-4">
-          <Link to="/login" className="btn btn-primary">Iniciar Sesión</Link>
-        </div>
-      )} */}
-      
-    
-
       <h1 className="mt-4 text-center text-white">
         <i className="fa-solid fa-search"></i> Buscar Acompañante Terapéutico
       </h1>
       
       <div className="row mb-4">
-       
         <div className="col-md-4 offset-md-4">
           <Form.Select
             value={selectedZone}
@@ -133,7 +116,7 @@ const BuscarAcompanante = () => {
             <div className="card mb-4 shadow-sm">
               <div className="text-center">
                 <img
-                  src={a.images}
+                  src={a.images || 'https://via.placeholder.com/150'}
                   className="rounded-circle patient-photo mb-3"
                   alt={a.nombreCompleto}
                 />

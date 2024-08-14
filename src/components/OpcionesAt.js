@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import './css/OpcionesAt.css';
 import { Link, useNavigate } from 'react-router-dom';
 import { signOut } from 'firebase/auth';
 import Swal from 'sweetalert2';

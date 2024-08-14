@@ -6,7 +6,7 @@ import './css/VerCaso.css';
 import Cargando from './Cargando';
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
-import CargaComponet from './CargaComponet';
+
 
 const MySwal = withReactContent(Swal);
 
@@ -109,7 +109,7 @@ const VerReclutadorEmail = () => {
 
   if (loading) {
     return (
-  <CargaComponet/>
+  <Cargando/>
     );
   }
 

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import './css/BuscarTrabajo.css';
-import OpcionesAt from './OpcionesAt';
+
 import { Link } from 'react-router-dom';
 import { collection, getDocs, doc, getDoc } from 'firebase/firestore';
 import { db, auth } from '../firebaseConfg/firebase';
@@ -120,7 +120,6 @@ const BuscarTrabajo = () => {
     <div className="container">
       {userRol === 'empleado' && (
         <>
-          {/* <OpcionesAt /> */}
           <h1 className="mt-4 text-center text-white">
             <i className="fa-solid fa-search"></i> Buscar Trabajo
           </h1>
