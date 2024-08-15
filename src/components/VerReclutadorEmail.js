@@ -7,7 +7,6 @@ import Cargando from './Cargando';
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
 
-
 const MySwal = withReactContent(Swal);
 
 const VerReclutadorEmail = () => {
@@ -15,65 +14,57 @@ const VerReclutadorEmail = () => {
   const [publicacion, setPublicacion] = useState(null);
   const [mailEnviados, setMailEnviados] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [userId, setUserId] = useState(null);
-  const [userRole, setUserRole] = useState(null);
   const navigate = useNavigate();
 
   useEffect(() => {
-    const fetchPublicacion = async () => {
-      setLoading(true);
+    const fetchData = async () => {
       try {
+        setLoading(true);
+
         const currentUser = auth.currentUser;
-        if (currentUser) {
-          setUserId(currentUser.uid);
+        if (!currentUser) {
+          setLoading(false);
+          return;
+        }
 
-          // Obtener el rol del usuario
-          const userDocRef = doc(db, 'usuarios', currentUser.uid);
-          const userDocSnap = await getDoc(userDocRef);
-          if (userDocSnap.exists()) {
-            setUserRole(userDocSnap.data().userRol);
-          } else {
-            console.error("No se encontró el documento del usuario.");
-            setUserRole(null);
-          }
+        const userDocRef = doc(db, 'usuarios', currentUser.uid);
+        await getDoc(userDocRef); // It's unclear why you're fetching the user document here; you may remove it if unnecessary.
 
-          const docRef = doc(db, 'publicaciones', id);
-          const docSnap = await getDoc(docRef);
-          if (docSnap.exists()) {
-            const data = docSnap.data();
-            setPublicacion(data);
+        const docRef = doc(db, 'publicaciones', id);
+        const docSnap = await getDoc(docRef);
 
-            // Obtener los correos enviados a esta publicación
-            const mailQuery = query(
-              collection(db, 'mailEnviadosPostulado'),
-              where('userIdPublicacion', '==', id)
-            );
-            const mailQuerySnapshot = await getDocs(mailQuery);
-            const mails = [];
-            mailQuerySnapshot.forEach(doc => {
-              mails.push({ id: doc.id, ...doc.data() });
-            });
-            setMailEnviados(mails);
+        if (docSnap.exists()) {
+          const data = docSnap.data();
+          setPublicacion(data);
 
-            // Cambiar el estado del último correo a 'Leído'
-            if (mails.length > 0) {
-              const lastMail = mails[mails.length - 1];
-              const mailDocRef = doc(db, 'mailEnviadosPostulado', lastMail.id);
-              await updateDoc(mailDocRef, { estado: 'Leído' });
-            }
-          } else {
-            setPublicacion(null);
+          const mailQuery = query(
+            collection(db, 'mailEnviadosPostulado'),
+            where('userIdPublicacion', '==', id)
+          );
+          const mailQuerySnapshot = await getDocs(mailQuery);
+          const mails = mailQuerySnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+          setMailEnviados(mails);
+
+          if (mails.length > 0) {
+            const lastMail = mails[mails.length - 1];
+            const mailDocRef = doc(db, 'mailEnviadosPostulado', lastMail.id);
+            await updateDoc(mailDocRef, { estado: 'Leído' });
           }
         } else {
-          console.error("No se puede obtener el usuario autenticado.");
+          setPublicacion(null);
         }
       } catch (error) {
-        console.error("Error al obtener la publicación:", error);
+        console.error('Error al obtener la publicación:', error);
+      } finally {
+        setLoading(false);
       }
-      setLoading(false);
     };
 
-    fetchPublicacion();
+    fetchData();
+
+    return () => {
+      // Any cleanup logic can go here
+    };
   }, [id]);
 
   const handleBack = () => {
@@ -88,29 +79,31 @@ const VerReclutadorEmail = () => {
         text: 'Por favor, inicia sesión para poder contactar con el acompañante.',
         icon: 'warning',
         showCloseButton: true,
-        confirmButtonText: 'Iniciar sesión'
+        confirmButtonText: 'Iniciar sesión',
       }).then((result) => {
         if (result.isConfirmed) {
           navigate('/login');
         }
       });
-    } else if (userRole !== 'reclutador') {
-      MySwal.fire({
-        title: 'Acceso denegado',
-        text: 'Solo los reclutadores pueden contactar con los acompañantes.',
-        icon: 'error',
-        showCloseButton: true,
-        confirmButtonText: 'Aceptar'
-      });
     } else {
-      navigate(`/showPerfil/${acompananteId}`);
+      const userRole = user?.role || 'guest'; // Ensure the user role is available
+      if (userRole !== 'reclutador') {
+        navigate(`/showPerfil/${acompananteId}`);
+      } else {
+        
+        MySwal.fire({
+          title: 'Acceso denegado',
+          text: 'Solo los reclutadores pueden contactar con los acompañantes.',
+          icon: 'error',
+          showCloseButton: true,
+          confirmButtonText: 'Aceptar',
+        });
+      }
     }
   };
 
   if (loading) {
-    return (
-  <Cargando/>
-    );
+    return <Cargando />;
   }
 
   if (!publicacion) {
@@ -138,7 +131,7 @@ const VerReclutadorEmail = () => {
                 <p className="mb-1 text-white"><i className="fas fa-file-alt me-2"></i><strong>Estado:</strong> {mail.estado}</p>
               </div>
               <button className="btn btn-warning text-white" onClick={() => handleContactClick(mail.userIdUsers)}>
-              <i class="fa-solid fa-eye"></i>
+                <i className="fa-solid fa-eye"></i>
               </button>
             </li>
           ))}

@@ -1,6 +1,4 @@
-import React, { useEffect, useState } from 'react';
-import './css/BuscarAcompanante.css';
-
+import React, { useEffect, useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { collection, getDocs, doc, getDoc } from 'firebase/firestore';
 import { db, auth } from '../firebaseConfg/firebase';
@@ -16,47 +14,58 @@ const BuscarAcompanante = () => {
   const [filteredPerfilLaboral, setFilteredPerfilLaboral] = useState([]);
   const [userRol, setUserRol] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [searchTerm, setSearchTerm] = useState('');
   const [selectedZone, setSelectedZone] = useState('Todos');
   const navigate = useNavigate();
+
   const perfilLaboralCollection = collection(db, 'perfilLaboral');
   const usersCollection = collection(db, 'usuarios');
 
-  const getPerfilLaboral = async () => {
-    const data = await getDocs(perfilLaboralCollection);
-    setPerfilLaboral(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
-  };
-
-  const getUserRole = async (userId) => {
-    const userDoc = await getDoc(doc(usersCollection, userId));
-    if (userDoc.exists()) {
-      setUserRol(userDoc.data().userRol);
+  const getPerfilLaboral = useCallback(async () => {
+    try {
+      const data = await getDocs(perfilLaboralCollection);
+      const perfiles = data.docs.map((doc) => ({ ...doc.data(), id: doc.id }));
+      setPerfilLaboral(perfiles);
+    } catch (error) {
+      console.error('Error al obtener perfiles:', error);
     }
-  };
+  }, [perfilLaboralCollection]);
+
+  const getUserRole = useCallback(async (userId) => {
+    try {
+      const userDoc = await getDoc(doc(usersCollection, userId));
+      if (userDoc.exists()) {
+        setUserRol(userDoc.data().userRol);
+      }
+    } catch (error) {
+      console.error('Error al obtener el rol del usuario:', error);
+    }
+  }, [usersCollection]);
 
   useEffect(() => {
     const fetchData = async () => {
-      const user = auth.currentUser;
-      if (user) {
-        const userId = user.uid;
-        await getUserRole(userId);
+      try {
+        const user = auth.currentUser;
+        if (user) {
+          const userId = user.uid;
+          await getUserRole(userId);
+        }
         await getPerfilLaboral();
-      } else {
-        await getPerfilLaboral();
+      } catch (error) {
+        console.error('Error al obtener datos:', error);
+      } finally {
+        setLoading(false);
       }
-      setLoading(false);
     };
 
     fetchData();
-  }, [auth.currentUser]);
+  }, [getPerfilLaboral, getUserRole]);
 
   useEffect(() => {
-    const filtered = perfilLaboral.filter(a =>
-      a.nombreCompleto.toLowerCase().includes(searchTerm.toLowerCase()) &&
-      (selectedZone === 'Todos' || a.zona === selectedZone)
+    const filtered = perfilLaboral.filter(a => 
+      selectedZone === 'Todos' || a.zona === selectedZone
     );
     setFilteredPerfilLaboral(filtered);
-  }, [searchTerm, selectedZone, perfilLaboral]);
+  }, [selectedZone, perfilLaboral]);
 
   const handleContactClick = (acompananteId) => {
     const user = auth.currentUser;
@@ -111,57 +120,61 @@ const BuscarAcompanante = () => {
       </div>
 
       <div className="row justify-content-center">
-        {filteredPerfilLaboral.map(a => (
-          <div className="col-md-6 col-lg-4" key={a.id}>
-            <div className="card mb-4 shadow-sm">
-              <div className="text-center">
-                <img
-                  src={a.images || 'https://via.placeholder.com/150'}
-                  className="rounded-circle patient-photo mb-3"
-                  alt={a.nombreCompleto}
-                />
-                <h5 className="card-title text-white">{a.nombreCompleto}</h5>
-                <p className="card-text text-white">
-                  <i className="fas fa-check-circle me-2"></i>
-                  <strong className='text-white'>Estado: </strong>
-                  <span className={`badge ${a.estado === 'Disponible' ? 'bg-success' : 'bg-secondary'}`}>
-                    {a.estado}
-                  </span>
-                </p>
-              </div>
-              <div className="card-body">
-                <p className="card-text text-white">
-                  <i className="fas fa-map-marker-alt me-2"></i>
-                  <strong className='text-white'>Localidad:</strong> {a.localidad}
-                </p>
-                <p className="card-text text-white">
-                  <i className="fas fa-map-marker-alt me-2"></i>
-                  <strong className='text-white'>Zona:</strong> {a.zona}
-                </p>
-                <p className="card-text text-white">
-                  <i className="fas fa-briefcase me-2"></i>
-                  <strong className='text-white'>Preferencia Laboral:</strong> {a.preferenciaLaboral}
-                </p>
-                <p className="card-text text-white">
-                  <i className="fas fa-graduation-cap me-2"></i>
-                  <strong className='text-white'>Formación:</strong> {a.formacion}
-                </p>
-                <p className="card-text text-white">
-                  <i className="fas fa-certificate me-2"></i>
-                  <strong className='text-white'>Título:</strong> {a.titulo}
-                </p>
-                <div className="text-center mt-3">
-                  <Button
-                    className="btn btn-warning"
-                    onClick={() => handleContactClick(a.id)}
-                  >
-                    <i className="fa-regular fa-pen-to-square"></i> Contactar
-                  </Button>
+        {filteredPerfilLaboral.length === 0 ? (
+          <p className="text-white">No hay acompañantes para mostrar.</p>
+        ) : (
+          filteredPerfilLaboral.map(a => (
+            <div className="col-md-6 col-lg-4" key={a.id}>
+              <div className="card mb-4 shadow-sm">
+                <div className="text-center">
+                  <img
+                    src={a.images || 'https://via.placeholder.com/150'}
+                    className="rounded-circle patient-photo mb-3"
+                    alt={a.nombreCompleto}
+                  />
+                  <h5 className="card-title text-white">{a.nombreCompleto}</h5>
+                  <p className="card-text text-white">
+                    <i className="fas fa-check-circle me-2"></i>
+                    <strong className='text-white'>Estado: </strong>
+                    <span className={`badge ${a.estado === 'Disponible' ? 'bg-success' : 'bg-secondary'}`}>
+                      {a.estado}
+                    </span>
+                  </p>
+                </div>
+                <div className="card-body">
+                  <p className="card-text text-white">
+                    <i className="fas fa-map-marker-alt me-2"></i>
+                    <strong className='text-white'>Localidad:</strong> {a.localidad}
+                  </p>
+                  <p className="card-text text-white">
+                    <i className="fas fa-map-marker-alt me-2"></i>
+                    <strong className='text-white'>Zona:</strong> {a.zona}
+                  </p>
+                  <p className="card-text text-white">
+                    <i className="fas fa-briefcase me-2"></i>
+                    <strong className='text-white'>Preferencia Laboral:</strong> {a.preferenciaLaboral}
+                  </p>
+                  <p className="card-text text-white">
+                    <i className="fas fa-graduation-cap me-2"></i>
+                    <strong className='text-white'>Formación:</strong> {a.formacion}
+                  </p>
+                  <p className="card-text text-white">
+                    <i className="fas fa-certificate me-2"></i>
+                    <strong className='text-white'>Título:</strong> {a.titulo}
+                  </p>
+                  <div className="text-center mt-3">
+                    <Button
+                      className="btn btn-warning"
+                      onClick={() => handleContactClick(a.id)}
+                    >
+                      <i className="fa-regular fa-pen-to-square"></i> Contactar
+                    </Button>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-        ))}
+          ))
+        )}
       </div>
     </div>
   );
